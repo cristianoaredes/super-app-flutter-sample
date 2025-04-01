@@ -79,6 +79,38 @@ flutter_arqt/
 - **Cards**: Gerenciamento de cartões
 - **Account**: Detalhes e extrato da conta
 
+## Screenshots
+
+### Tela 1 - Login
+<img src="docs/screenshots/tela1.png" width="300" alt="Tela de Login" />
+
+### Tela 2 - Dashboard
+<img src="docs/screenshots/tela2.png" width="300" alt="Tela de Dashboard" />
+
+### Tela 3 - Menu
+<img src="docs/screenshots/tela3.png" width="300" alt="Tela de Menu" />
+
+### Tela 4 - Lista de Cartões
+<img src="docs/screenshots/tela4.png" width="300" alt="Lista de Cartões" />
+
+### Tela 4.1 - Detalhes do Cartão
+<img src="docs/screenshots/tela4.1.png" width="300" alt="Detalhes do Cartão" />
+
+### Tela 5 - Área Pix
+<img src="docs/screenshots/tela5.png" width="300" alt="Área Pix" />
+
+### Tela 5.1 - Transferência Pix
+<img src="docs/screenshots/tela5.1.png" width="300" alt="Transferência Pix" />
+
+### Tela 5.2 - Chaves Pix
+<img src="docs/screenshots/tela5.2.png" width="300" alt="Chaves Pix" />
+
+### Tela 6 - Pagamentos
+<img src="docs/screenshots/tela6.png" width="300" alt="Tela de Pagamentos" />
+
+### Tela 6.1 - Novo Pagamento
+<img src="docs/screenshots/tela6.1.png" width="300" alt="Novo Pagamento" />
+
 ## Soluções Arquiteturais
 
 ### Inicialização de Micro Apps Sob Demanda
