@@ -79,38 +79,6 @@ flutter_arqt/
 - **Cards**: Gerenciamento de cartões
 - **Account**: Detalhes e extrato da conta
 
-## Screenshots
-
-### Tela 1 - Login
-<img src="docs/screenshots/tela1.png" width="300" alt="Tela de Login" />
-
-### Tela 2 - Dashboard
-<img src="docs/screenshots/tela2.png" width="300" alt="Tela de Dashboard" />
-
-### Tela 3 - Menu
-<img src="docs/screenshots/tela3.png" width="300" alt="Tela de Menu" />
-
-### Tela 4 - Lista de Cartões
-<img src="docs/screenshots/tela4.png" width="300" alt="Lista de Cartões" />
-
-### Tela 4.1 - Detalhes do Cartão
-<img src="docs/screenshots/tela4.1.png" width="300" alt="Detalhes do Cartão" />
-
-### Tela 5 - Área Pix
-<img src="docs/screenshots/tela5.png" width="300" alt="Área Pix" />
-
-### Tela 5.1 - Transferência Pix
-<img src="docs/screenshots/tela5.1.png" width="300" alt="Transferência Pix" />
-
-### Tela 5.2 - Chaves Pix
-<img src="docs/screenshots/tela5.2.png" width="300" alt="Chaves Pix" />
-
-### Tela 6 - Pagamentos
-<img src="docs/screenshots/tela6.png" width="300" alt="Tela de Pagamentos" />
-
-### Tela 6.1 - Novo Pagamento
-<img src="docs/screenshots/tela6.1.png" width="300" alt="Novo Pagamento" />
-
 ## Soluções Arquiteturais
 
 ### Inicialização de Micro Apps Sob Demanda
@@ -378,22 +346,36 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para d
 
 ## Screenshots do App
 
+### Fluxo Principal
 <div align="center">
   <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela1.png" width="230" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela2.png" width="230" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela3.png" width="230"/>
-  </div>
-  <br/>
-  <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela4.png" width="230" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela5.png" width="230"/>
+    <img src="docs/screenshots/tela1.png" width="230" alt="Tela de Login" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela2.png" width="230" alt="Tela de Dashboard" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela3.png" width="230" alt="Tela de Menu"/>
   </div>
 </div>
 
-### Funcionalidade Pix
+### Cartões
+<div align="center">
+  <div style="display: flex; align-items: flex-start; justify-content: center;">
+    <img src="docs/screenshots/tela4.png" width="230" alt="Lista de Cartões" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela4.1.png" width="230" alt="Detalhes do Cartão"/>
+  </div>
+</div>
 
-<p align="center">
-  <img src="docs/screenshots/pix_home.png" width="250" alt="Home do Pix">
-  <img src="docs/screenshots/pix_enviar.png" width="250" alt="Enviar Pix">
-</p>
+### Área Pix
+<div align="center">
+  <div style="display: flex; align-items: flex-start; justify-content: center;">
+    <img src="docs/screenshots/tela5.png" width="230" alt="Área Pix" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela5.1.png" width="230" alt="Transferência Pix" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela5.2.png" width="230" alt="Chaves Pix"/>
+  </div>
+</div>
+
+### Pagamentos
+<div align="center">
+  <div style="display: flex; align-items: flex-start; justify-content: center;">
+    <img src="docs/screenshots/tela6.png" width="230" alt="Tela de Pagamentos" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela6.1.png" width="230" alt="Novo Pagamento"/>
+  </div>
+</div>
