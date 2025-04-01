@@ -7,7 +7,6 @@ import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
 import '../bloc/account_state.dart';
 
-
 class AccountDetailsPage extends StatefulWidget {
   const AccountDetailsPage({super.key});
 
@@ -19,7 +18,6 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   String _formatDate(DateTime date) {
@@ -40,8 +38,6 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
         return 'Conta Salário';
       case AccountType.investment:
         return 'Conta Investimento';
-      default:
-        return 'Conta';
     }
   }
 
@@ -55,8 +51,6 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
         return 'Bloqueada';
       case AccountStatus.closed:
         return 'Encerrada';
-      default:
-        return 'Desconhecido';
     }
   }
 
@@ -70,8 +64,6 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
         return Colors.red;
       case AccountStatus.closed:
         return Colors.grey;
-      default:
-        return Colors.grey;
     }
   }
 
@@ -84,7 +76,6 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
       body: BlocProvider<AccountBloc>(
         create: (context) => GetIt.instance<AccountBloc>(),
         child: Builder(builder: (context) {
-          
           context.read<AccountBloc>().add(const LoadAccountEvent());
 
           return BlocBuilder<AccountBloc, AccountState>(

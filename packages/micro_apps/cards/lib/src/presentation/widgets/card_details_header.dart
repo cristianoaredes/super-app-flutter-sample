@@ -1,112 +1,83 @@
 import 'package:flutter/material.dart' hide Card;
+import 'package:shared_utils/shared_utils.dart';
 
 import '../../domain/entities/card.dart';
-
 
 class CardDetailsHeader extends StatelessWidget {
   final Card card;
 
   const CardDetailsHeader({
-    super.key,
+    Key? key,
     required this.card,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = _getCardColor(card.brand);
-    final textColor = _getTextColor(cardColor);
-
-    return Container(
-      height: 200.0,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            cardColor,
-            cardColor.withOpacity(0.8),
-          ],
+    return Material(
+      elevation: 2.0,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            ],
+          ),
         ),
-        borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
-          BoxShadow(
-            color: cardColor.withOpacity(0.4),
-            blurRadius: 8.0,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          
-          Positioned(
-            top: 16.0,
-            left: 16.0,
-            child: Container(
-              width: 40.0,
-              height: 30.0,
-              decoration: BoxDecoration(
-                color: Colors.amber.shade300,
-                borderRadius: BorderRadius.circular(4.0),
-              ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  card.brand.toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(
+                  card.isBlocked ? Icons.lock : Icons.lock_open,
+                  color: Colors.white,
+                  size: 24.0,
+                ),
+              ],
             ),
-          ),
-
-          
-          Positioned(
-            top: 16.0,
-            right: 16.0,
-            child: Text(
-              card.brand,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          
-          Positioned(
-            top: 70.0,
-            left: 16.0,
-            right: 16.0,
-            child: Text(
+            const SizedBox(height: 24.0),
+            Text(
               card.maskedNumber,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 18.0,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24.0,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 2.0,
               ),
             ),
-          ),
-
-          
-          Positioned(
-            bottom: 16.0,
-            left: 16.0,
-            right: 16.0,
-            child: Row(
+            const SizedBox(height: 24.0),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'TITULAR',
                       style: TextStyle(
-                        color: textColor.withOpacity(0.8),
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
+                        color: Colors.white70,
+                        fontSize: 12.0,
                       ),
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      card.holderName,
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 14.0,
+                      card.holderName.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -115,20 +86,19 @@ class CardDetailsHeader extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
+                    const Text(
                       'VALIDADE',
                       style: TextStyle(
-                        color: textColor.withOpacity(0.8),
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
+                        color: Colors.white70,
+                        fontSize: 12.0,
                       ),
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      '${card.expirationDate.month.toString().padLeft(2, '0')}/${card.expirationDate.year.toString().substring(2)}',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 14.0,
+                      card.expirationDate.toBR,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -136,65 +106,9 @@ class CardDetailsHeader extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-
-          
-          if (card.isBlocked || !card.isActive)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        card.isBlocked ? Icons.lock : Icons.block,
-                        color: Colors.white,
-                        size: 48.0,
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        card.isBlocked ? 'CARTÃO BLOQUEADO' : 'CARTÃO INATIVO',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
-  }
-
-  Color _getCardColor(String brand) {
-    switch (brand.toLowerCase()) {
-      case 'visa':
-        return const Color(0xFF1A1F71);
-      case 'mastercard':
-        return const Color(0xFF3D3D3D);
-      case 'amex':
-      case 'american express':
-        return const Color(0xFF2E77BB);
-      case 'elo':
-        return const Color(0xFF00A4E0);
-      case 'hipercard':
-        return const Color(0xFFB3131B);
-      default:
-        return const Color(0xFF2E3192);
-    }
-  }
-
-  Color _getTextColor(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
   }
 }

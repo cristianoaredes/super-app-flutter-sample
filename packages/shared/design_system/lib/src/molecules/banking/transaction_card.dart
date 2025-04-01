@@ -22,7 +22,7 @@ class Transaction {
   final TransactionCategory category;
   final String? imageUrl;
   final bool isPending;
-  
+
   Transaction({
     required this.id,
     required this.title,
@@ -38,7 +38,7 @@ class Transaction {
 class TransactionCard extends StatelessWidget {
   final Transaction transaction;
   final VoidCallback? onTap;
-  
+
   const TransactionCard({
     Key? key,
     required this.transaction,
@@ -49,24 +49,22 @@ class TransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    
-    
+
     AmountType amountType;
     if (transaction.isPending) {
       amountType = AmountType.pending;
-    } else if (transaction.category == TransactionCategory.income || 
+    } else if (transaction.category == TransactionCategory.income ||
         transaction.category == TransactionCategory.cashback) {
       amountType = AmountType.positive;
-    } else if (transaction.category == TransactionCategory.expense || 
+    } else if (transaction.category == TransactionCategory.expense ||
         transaction.category == TransactionCategory.subscription) {
       amountType = AmountType.negative;
     } else {
       amountType = AmountType.neutral;
     }
-    
-    
+
     IconData categoryIcon = _getCategoryIcon(transaction.category);
-    
+
     return Card(
       margin: EdgeInsets.symmetric(
         vertical: BankSpacing.xs,
@@ -79,7 +77,6 @@ class TransactionCard extends StatelessWidget {
           padding: EdgeInsets.all(BankSpacing.md),
           child: Row(
             children: [
-              
               Container(
                 width: 48,
                 height: 48,
@@ -107,8 +104,6 @@ class TransactionCard extends StatelessWidget {
                       ),
               ),
               SizedBox(width: BankSpacing.md),
-              
-              
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,8 +137,6 @@ class TransactionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -180,7 +173,7 @@ class TransactionCard extends StatelessWidget {
       ),
     );
   }
-  
+
   IconData _getCategoryIcon(TransactionCategory category) {
     switch (category) {
       case TransactionCategory.income:
@@ -198,17 +191,16 @@ class TransactionCard extends StatelessWidget {
       case TransactionCategory.loan:
         return Icons.account_balance;
       case TransactionCategory.other:
-      default:
         return Icons.receipt;
     }
   }
-  
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final dateOnly = DateTime(date.year, date.month, date.day);
-    
+
     if (dateOnly == today) {
       return 'Hoje, ${_formatTime(date)}';
     } else if (dateOnly == yesterday) {
@@ -217,7 +209,7 @@ class TransactionCard extends StatelessWidget {
       return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}, ${_formatTime(date)}';
     }
   }
-  
+
   String _formatTime(DateTime date) {
     return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }

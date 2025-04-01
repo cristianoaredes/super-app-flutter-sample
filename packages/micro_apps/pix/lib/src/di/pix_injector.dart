@@ -98,7 +98,8 @@ class PixInjector {
       ),
     );
 
-    getIt.registerLazySingleton(
+    // Registra o PixBloc como factory para garantir que uma nova instância seja criada a cada vez
+    getIt.registerFactory(
       () => PixBloc(
         getPixKeysUseCase: getIt<GetPixKeysUseCase>(),
         registerPixKeyUseCase: getIt<RegisterPixKeyUseCase>(),

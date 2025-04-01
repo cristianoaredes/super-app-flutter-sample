@@ -1,20 +1,21 @@
-import '../entities/card_statement.dart';
-import '../entities/card_transaction.dart';
-import '../repositories/cards_repository.dart';
+import 'package:cards/cards.dart';
 
+import '../entities/get_card_statement_params.dart';
 
 class GetCardStatementUseCase {
   final CardsRepository _repository;
-  
+
   GetCardStatementUseCase({required CardsRepository repository})
       : _repository = repository;
-  
-  
-  Future<CardStatement> execute(String cardId, {DateTime? startDate, DateTime? endDate}) {
-    return _repository.getCardStatement(cardId, startDate: startDate, endDate: endDate);
+
+  Future<CardStatement> execute(GetCardStatementParams params) async {
+    return await _repository.getCardStatement(
+      params.cardId,
+      startDate: params.startDate,
+      endDate: params.endDate,
+    );
   }
-  
-  
+
   Future<CardTransaction?> getTransactionById(String id) {
     return _repository.getTransactionById(id);
   }

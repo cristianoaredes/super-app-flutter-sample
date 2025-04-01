@@ -4,8 +4,8 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
-  flutter: ">=3.19.0"
+  sdk: ">=3.7.2 <4.0.0"
+  flutter: ">=3.29.2"
 
 dependencies:
   flutter:
@@ -52,25 +52,25 @@ dependencies:
     path: ../packages/shared/shared_utils
 
   # State Management
-  flutter_bloc: ^8.1.3
-  hydrated_bloc: ^9.1.2
+  flutter_bloc: ^8.1.6
+  hydrated_bloc: ^9.1.5
 
   # Dependency Injection
-  get_it: ^7.6.4
+  get_it: ^7.7.0
 
   # Navigation
-  go_router: ^12.1.1
+  go_router: ^12.1.3
 
   # Storage
-  shared_preferences: ^2.2.2
-  path_provider: ^2.1.1
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.4
 
   # Network
-  http: ^1.1.0
+  http: ^1.2.2
   dio: ^5.3.3
 
   # Code Generation
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^2.4.4
   json_annotation: ^4.8.1
 
   # Utils
@@ -81,12 +81,15 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
   # Code Generation
-  build_runner: ^2.4.6
-  freezed: ^2.4.5
-  json_serializable: ^6.7.1
+  build_runner: ^2.4.9
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/

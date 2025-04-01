@@ -1,0 +1,2 @@
+/Users/cristianocosta/workspace/projetos/flutter_arqt/super_app/android/app/.cxx/Debug/v664z4u1/x86_64/CMakeFiles/edit_cache.dir
+/Users/cristianocosta/workspace/projetos/flutter_arqt/super_app/android/app/.cxx/Debug/v664z4u1/x86_64/CMakeFiles/rebuild_cache.dir

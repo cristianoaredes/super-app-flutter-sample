@@ -61,7 +61,6 @@ class _BankTextFieldState extends State<BankTextField> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    
     TextInputType keyboardType;
     List<TextInputFormatter> formatters = widget.inputFormatters ?? [];
 
@@ -84,17 +83,13 @@ class _BankTextFieldState extends State<BankTextField> {
         keyboardType = TextInputType.text;
         break;
       case BankTextFieldType.text:
-      default:
         keyboardType = TextInputType.text;
         break;
     }
 
-    
-    final String labelText = widget.isRequired 
-        ? '${widget.label} *' 
-        : widget.label;
+    final String labelText =
+        widget.isRequired ? '${widget.label} *' : widget.label;
 
-    
     Widget? suffixIcon;
     if (widget.type == BankTextFieldType.password) {
       suffixIcon = IconButton(
@@ -118,7 +113,8 @@ class _BankTextFieldState extends State<BankTextField> {
       children: [
         TextField(
           controller: widget.controller,
-          obscureText: widget.type == BankTextFieldType.password && _obscureText,
+          obscureText:
+              widget.type == BankTextFieldType.password && _obscureText,
           keyboardType: keyboardType,
           textInputAction: widget.textInputAction,
           maxLines: widget.maxLines,
@@ -135,8 +131,8 @@ class _BankTextFieldState extends State<BankTextField> {
             prefixIcon: widget.prefix,
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: widget.enabled 
-                ? colorScheme.surface 
+            fillColor: widget.enabled
+                ? colorScheme.surface
                 : colorScheme.surfaceVariant.withOpacity(0.5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),

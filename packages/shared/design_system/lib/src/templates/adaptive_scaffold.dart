@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'responsive_grid.dart';
 
-
 enum NavigationType {
   bottom,
   rail,
   drawer,
 }
-
 
 class AdaptiveScaffold extends StatelessWidget {
   final String title;
@@ -37,19 +35,16 @@ class AdaptiveScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return ResponsiveBuilder(
       builder: (context, breakpoint) {
         final navigationType = _getNavigationType(breakpoint);
 
-        
         switch (navigationType) {
           case NavigationType.rail:
             return _buildWithNavigationRail(context);
           case NavigationType.drawer:
             return _buildWithNavigationDrawer(context);
           case NavigationType.bottom:
-          default:
             return _buildWithBottomBar(context);
         }
       },

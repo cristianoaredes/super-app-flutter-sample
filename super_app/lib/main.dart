@@ -88,52 +88,67 @@ Future<void> _initializeCoreServices() async {
 
   try {
     await Future.wait([
-      getIt<StorageService>().initialize().then((_) {
-        initializedServices.add('storage');
-        safeLog('Serviço de storage inicializado');
-      }).catchError((e) {
-        safeLog('Erro ao inicializar storage: $e', level: LogLevel.error);
-      }),
-      _initializeFeatureFlags().then((_) {
-        initializedServices.add('feature_flags');
-        safeLog('Feature flags inicializadas');
-      }).catchError((e) {
-        safeLog('Erro ao inicializar feature flags: $e', level: LogLevel.error);
-      }),
+      getIt<StorageService>()
+          .initialize()
+          .then((_) {
+            initializedServices.add('storage');
+            safeLog('Serviço de storage inicializado');
+          })
+          .catchError((e) {
+            safeLog('Erro ao inicializar storage: $e', level: LogLevel.error);
+          }),
+      _initializeFeatureFlags()
+          .then((_) {
+            initializedServices.add('feature_flags');
+            safeLog('Feature flags inicializadas');
+          })
+          .catchError((e) {
+            safeLog(
+              'Erro ao inicializar feature flags: $e',
+              level: LogLevel.error,
+            );
+          }),
     ]);
 
     if (initializedServices.contains('storage')) {
       try {
         final analyticsService = getIt<AnalyticsService>();
         if (analyticsService is CoreLibrary) {
-          await (analyticsService as CoreLibrary)
-              .initialize(CoreLibraryDependencies(
-            config: getIt<core_interfaces.AppConfig>(),
-            services: {
-              if (logService != null) LoggingService: logService,
-              StorageService: getIt<StorageService>(),
-            },
-          ));
+          await (analyticsService as CoreLibrary).initialize(
+            CoreLibraryDependencies(
+              config: getIt<core_interfaces.AppConfig>(),
+              services: {
+                if (logService != null) LoggingService: logService,
+                StorageService: getIt<StorageService>(),
+              },
+            ),
+          );
           initializedServices.add('analytics');
           safeLog('Serviço de analytics inicializado');
         } else {
-          safeLog('AnalyticsService não é uma instância de CoreLibrary',
-              level: LogLevel.warning);
+          safeLog(
+            'AnalyticsService não é uma instância de CoreLibrary',
+            level: LogLevel.warning,
+          );
         }
       } catch (e) {
         safeLog('Erro ao inicializar analytics: $e', level: LogLevel.error);
       }
     } else {
       safeLog(
-          'Não foi possível inicializar analytics porque storage não foi inicializado',
-          level: LogLevel.warning);
+        'Não foi possível inicializar analytics porque storage não foi inicializado',
+        level: LogLevel.warning,
+      );
     }
 
     safeLog(
-        'Inicialização dos serviços core finalizada. Serviços inicializados: ${initializedServices.join(", ")}');
+      'Inicialização dos serviços core finalizada. Serviços inicializados: ${initializedServices.join(", ")}',
+    );
   } catch (e) {
-    safeLog('Erro geral ao inicializar serviços core: $e',
-        level: LogLevel.error);
+    safeLog(
+      'Erro geral ao inicializar serviços core: $e',
+      level: LogLevel.error,
+    );
     if (kDebugMode) {
       print('Erro ao inicializar serviços core: $e');
     }
@@ -147,20 +162,20 @@ Future<void> _initializeFeatureFlags() async {
 
     if (featureFlagService is CoreLibrary) {
       try {
-        await (featureFlagService as CoreLibrary)
-            .initialize(CoreLibraryDependencies(
-          config: getIt<core_interfaces.AppConfig>(),
-          services: {
-            LoggingService: logService,
-          },
-        ));
+        await (featureFlagService as CoreLibrary).initialize(
+          CoreLibraryDependencies(
+            config: getIt<core_interfaces.AppConfig>(),
+            services: {LoggingService: logService},
+          ),
+        );
         logService.info('Feature flags inicializadas com sucesso');
       } catch (e) {
         logService.error('Erro ao inicializar feature flags: $e');
       }
     } else {
-      logService
-          .warning('FeatureFlagService não é uma instância de CoreLibrary');
+      logService.warning(
+        'FeatureFlagService não é uma instância de CoreLibrary',
+      );
     }
   } catch (e) {
     if (kDebugMode) {
@@ -192,43 +207,51 @@ Future<void> _initializeMicroApps(MicroAppDependencies dependencies) async {
               try {
                 (microApp as dynamic).paymentsCubit;
                 loggingService.info(
-                    'Micro app $microAppName já estava inicializado e é válido');
+                  'Micro app $microAppName já estava inicializado e é válido',
+                );
                 return;
               } catch (e) {
                 loggingService.warning(
-                    'PaymentsCubit não está em um estado válido, reinicializando: $e');
+                  'PaymentsCubit não está em um estado válido, reinicializando: $e',
+                );
                 await microApp.dispose();
               }
             } else if (microAppName == 'pix') {
               try {
                 (microApp as dynamic).pixBloc;
                 loggingService.info(
-                    'Micro app $microAppName já estava inicializado e é válido');
+                  'Micro app $microAppName já estava inicializado e é válido',
+                );
                 return;
               } catch (e) {
                 loggingService.warning(
-                    'PixBloc não está em um estado válido, reinicializando: $e');
+                  'PixBloc não está em um estado válido, reinicializando: $e',
+                );
                 await microApp.dispose();
               }
             } else {
-              loggingService
-                  .info('Micro app $microAppName já estava inicializado');
+              loggingService.info(
+                'Micro app $microAppName já estava inicializado',
+              );
               return;
             }
           } catch (e) {
             loggingService.warning(
-                'Erro ao verificar estado do $microAppName, reinicializando: $e');
+              'Erro ao verificar estado do $microAppName, reinicializando: $e',
+            );
             try {
               await microApp.dispose();
             } catch (disposeError) {
-              loggingService
-                  .error('Erro ao descartar $microAppName: $disposeError');
+              loggingService.error(
+                'Erro ao descartar $microAppName: $disposeError',
+              );
             }
           }
         }
 
-        loggingService
-            .info('Inicializando micro app sob demanda: $microAppName');
+        loggingService.info(
+          'Inicializando micro app sob demanda: $microAppName',
+        );
 
         try {
           final dependencies = MicroAppDependencies(
@@ -247,8 +270,9 @@ Future<void> _initializeMicroApps(MicroAppDependencies dependencies) async {
 
           microApp.registerBlocs(blocRegistry);
 
-          loggingService
-              .info('Micro app $microAppName inicializado com sucesso');
+          loggingService.info(
+            'Micro app $microAppName inicializado com sucesso',
+          );
         } catch (e) {
           loggingService.error('Falha ao inicializar $microAppName: $e');
           throw Exception('Falha ao inicializar $microAppName: $e');
@@ -281,12 +305,11 @@ class SuperApp extends StatefulWidget {
 }
 
 class _SuperAppState extends State<SuperApp> {
-  late final router = AppRouter(
-    getIt: getIt,
-    observers: [
-      getIt<RouteObserver<ModalRoute<dynamic>>>(),
-    ],
-  ).router;
+  late final router =
+      AppRouter(
+        getIt: getIt,
+        observers: [getIt<RouteObserver<ModalRoute<dynamic>>>()],
+      ).router;
 
   @override
   void initState() {
@@ -303,16 +326,12 @@ class _SuperAppState extends State<SuperApp> {
     final blocProviders = <BlocProvider>[];
 
     blocProviders.add(
-      BlocProvider<ThemeBloc>(
-        create: (context) => getIt<ThemeBloc>(),
-      ),
+      BlocProvider<ThemeBloc>(create: (context) => getIt<ThemeBloc>()),
     );
 
     if (blocRegistry.contains<PixBloc>()) {
       blocProviders.add(
-        BlocProvider<PixBloc>.value(
-          value: blocRegistry.get<PixBloc>()!,
-        ),
+        BlocProvider<PixBloc>.value(value: blocRegistry.get<PixBloc>()!),
       );
     }
 
@@ -321,7 +340,7 @@ class _SuperAppState extends State<SuperApp> {
       child: BlocBuilder<ThemeBloc, dynamic>(
         builder: (context, state) {
           return MaterialApp.router(
-            title: 'Super App - Arquitetura Modular',
+            title: 'Premium Bank - Arquitetura Modular',
             theme: getIt(instanceName: 'lightTheme'),
             darkTheme: getIt(instanceName: 'darkTheme'),
             themeMode: ThemeMode.dark,

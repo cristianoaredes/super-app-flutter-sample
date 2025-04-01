@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+    <rect width="150" height="150" fill="none"/>
+    <circle cx="75" cy="75" r="60" fill="#1a237e"/>
+    <text x="75" y="85" font-family="Arial" font-size="24" fill="white" text-anchor="middle">PREMIUM</text>
+</svg> 
