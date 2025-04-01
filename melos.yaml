@@ -1,0 +1,37 @@
+name: flutter_arqt
+repository: https://github.com/cristianoaredes/flutter_arqt
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+sdkPath: auto
+
+packages:
+  - packages/core/**
+  - packages/shared/**
+  - packages/micro_apps/**
+  - packages/plugins/**
+  - super_app
+
+scripts:
+  analyze:
+    description: Executar análise estática em todos os pacotes
+    exec: flutter analyze
+
+  test:
+    description: Executar testes em todos os pacotes que possuem testes
+    exec: flutter test
+    failFast: true
+
+  build_runner:
+    description: Executar build_runner em todos os pacotes
+    exec: flutter pub run build_runner build --delete-conflicting-outputs
+
+  version:
+    description: Versionar pacotes
+    run: melos version
+
+  publish:
+    description: Publicar pacotes no repositório pub privado
+    run: melos publish

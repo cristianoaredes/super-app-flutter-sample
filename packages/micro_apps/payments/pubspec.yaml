@@ -1,0 +1,39 @@
+name: payments
+description: MicroApp de pagamentos para a arquitetura modular Flutter
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_interfaces:
+    path: ../../core/core_interfaces
+
+  # State Management
+  flutter_bloc: ^8.1.3
+  hydrated_bloc: ^9.1.2
+
+  # Code Generation
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+  # Utils
+  intl: ^0.18.1
+  get_it: ^7.6.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+  # Code Generation
+  build_runner: ^2.4.6
+  freezed: ^2.4.5
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true

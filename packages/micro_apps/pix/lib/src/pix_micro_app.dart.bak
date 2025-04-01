@@ -1,0 +1,87 @@
+import 'package:core_interfaces/core_interfaces.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+
+import 'di/pix_injector.dart';
+import 'presentation/bloc/pix_bloc.dart';
+import 'presentation/pages/pix_home_page.dart';
+import 'presentation/pages/pix_keys_page.dart';
+import 'presentation/pages/register_pix_key_page.dart';
+import 'presentation/pages/send_pix_page.dart';
+import 'presentation/pages/receive_pix_page.dart';
+import 'presentation/pages/pix_qr_code_scanner_page.dart';
+import 'presentation/pages/pix_transaction_details_page.dart';
+
+/// Implementação do micro app de Pix
+class PixMicroApp implements MicroApp {
+  final GetIt _getIt;
+
+  PixMicroApp({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+
+  @override
+  String get id => 'pix';
+
+  @override
+  String get name => 'Pix';
+
+  @override
+  Map<String, GoRouteBuilder> get routes => {
+        '/pix': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const PixHomePage(),
+            ),
+        '/pix/keys': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const PixKeysPage(),
+            ),
+        '/pix/keys/register': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const RegisterPixKeyPage(),
+            ),
+        '/pix/send': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const SendPixPage(),
+            ),
+        '/pix/receive': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const ReceivePixPage(),
+            ),
+        '/pix/scan': (context, state) => BlocProvider<PixBloc>(
+              create: (context) => _getIt<PixBloc>(),
+              child: const PixQrCodeScannerPage(),
+            ),
+        '/pix/transaction/:id': (context, state) {
+          final id = state.params['id'] ?? '';
+          return BlocProvider<PixBloc>(
+            create: (context) => _getIt<PixBloc>(),
+            child: PixTransactionDetailsPage(transactionId: id),
+          );
+        },
+      };
+
+  @override
+  Future<void> initialize(MicroAppDependencies dependencies) async {
+    // Registrar dependências
+    PixInjector.register(_getIt);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<PixBloc>(
+      create: (context) => _getIt<PixBloc>(),
+      child: const PixHomePage(),
+    );
+  }
+
+  @override
+  void registerBlocs(BlocRegistry registry) {
+    final pixBloc = _getIt<PixBloc>();
+    registry.register(pixBloc);
+  }
+
+  @override
+  Future<void> dispose() async {
+    // Limpar recursos
+  }
+}

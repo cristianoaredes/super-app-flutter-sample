@@ -1,0 +1,92 @@
+name: super_app
+description: Aplicativo principal que orquestra os MicroApps
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core packages
+  core_interfaces:
+    path: ../packages/core/core_interfaces
+  core_network:
+    path: ../packages/core/core_network
+  core_storage:
+    path: ../packages/core/core_storage
+  core_analytics:
+    path: ../packages/core/core_analytics
+  core_communication:
+    path: ../packages/core/core_communication
+  core_feature_flags:
+    path: ../packages/core/core_feature_flags
+  core_logging:
+    path: ../packages/core/core_logging
+  core_navigation:
+    path: ../packages/core/core_navigation
+
+  # MicroApps
+  account:
+    path: ../packages/micro_apps/account
+  auth:
+    path: ../packages/micro_apps/auth
+  cards:
+    path: ../packages/micro_apps/cards
+  dashboard:
+    path: ../packages/micro_apps/dashboard
+  payments:
+    path: ../packages/micro_apps/payments
+  pix:
+    path: ../packages/micro_apps/pix
+  splash:
+    path: ../packages/micro_apps/splash
+
+  # Shared packages
+  design_system:
+    path: ../packages/shared/design_system
+  shared_utils:
+    path: ../packages/shared/shared_utils
+
+  # State Management
+  flutter_bloc: ^8.1.3
+  hydrated_bloc: ^9.1.2
+
+  # Dependency Injection
+  get_it: ^7.6.4
+
+  # Navigation
+  go_router: ^12.1.1
+
+  # Storage
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+
+  # Network
+  http: ^1.1.0
+  dio: ^5.3.3
+
+  # Code Generation
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+  # Utils
+  intl: ^0.18.1
+  uuid: ^4.1.0
+  equatable: ^2.0.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+  # Code Generation
+  build_runner: ^2.4.6
+  freezed: ^2.4.5
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,23 @@
+name: core_navigation
+description: Core navigation package for the modular architecture
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_interfaces:
+    path: ../core_interfaces
+  go_router: ^12.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

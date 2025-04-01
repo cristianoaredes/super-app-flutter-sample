@@ -1,31 +1,38 @@
-# Premium Bank - Arquitetura Modular Flutter
+# super-app-flutter-sample
 
 <p align="center">
   <img src="https://img.shields.io/badge/Flutter-3.19+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter Version" />
   <img src="https://img.shields.io/badge/Dart-3.3+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart Version" />
-  <img src="https://img.shields.io/badge/Architecture-Clean-brightgreen?style=for-the-badge" alt="Architecture" />
-  <img src="https://img.shields.io/badge/State-BLoC-blue?style=for-the-badge" alt="State Management" />
+  <img src="https://img.shields.io/badge/Architecture-Modular-brightgreen?style=for-the-badge" alt="Architecture" />
+  <img src="https://img.shields.io/badge/State-BLoC/Cubit-blue?style=for-the-badge" alt="State Management" />
 </p>
 
-Este projeto implementa um aplicativo bancário premium com arquitetura modular para Flutter, seguindo os princípios de Clean Architecture e utilizando micro apps para organizar as funcionalidades. O design utiliza um tema premium com cores preto e dourado para transmitir sofisticação e exclusividade.
+Este projeto implementa uma arquitetura modular para Flutter usando o conceito de micro apps, com foco na inicialização sob demanda, gerenciamento de ciclo de vida de componentes e comunicação entre módulos independentes.
+
+## Características Principais
+
+- **Arquitetura Modular**: Uso de micro apps isolados e independentes
+- **Inicialização Sob Demanda**: Carregamento de módulos apenas quando necessário
+- **Gerenciamento de Estado Robusto**: Implementação segura com BLoC/Cubit
+- **Recuperação de Falhas**: Detecção e recuperação automática de estados inválidos
+- **Middleware de Rota Inteligente**: Gestão de rotas com inicialização automática de módulos
 
 ## Tecnologias Principais
 
-- **Flutter**: Versão estável mais recente (3.19+)
+- **Flutter**: 3.19+
 - **Dart**: 3.3+
-- **Gerenciamento de Estado**: bloc 8.0+ com hydrated_bloc e Cubit
-- **Gerenciamento de Pacotes**: Melos para orquestração multi-repo
-- **Geração de Código**: build_runner com freezed e json_serializable
-- **Navegação**: go_router para deep linking e navegação
-- **Injeção de Dependência**: get_it para localização de serviços
+- **Gerenciamento de Estado**: bloc com flutter_bloc e hydrated_bloc
+- **Injeção de Dependência**: get_it
+- **Navegação**: go_router
+- **Código Gerado**: freezed e json_serializable
 
 ## Estrutura do Projeto
 
 O projeto é organizado em três camadas principais:
 
-1. **Super App**: Orquestra os micro apps e fornece funcionalidades compartilhadas.
-2. **Micro Apps**: Implementam funcionalidades específicas de forma independente.
-3. **Pacotes Core e Shared**: Fornecem funcionalidades compartilhadas entre os micro apps.
+1. **Super App**: Orquestra os micro apps e fornece funcionalidades compartilhadas
+2. **Micro Apps**: Implementam funcionalidades específicas de forma independente
+3. **Pacotes Core**: Fornecem funcionalidades compartilhadas entre os micro apps
 
 ```
 flutter_arqt/
@@ -34,69 +41,149 @@ flutter_arqt/
 │   │   ├── core_analytics/    # Serviço de analytics
 │   │   ├── core_interfaces/   # Interfaces compartilhadas
 │   │   ├── core_network/      # Serviço de rede
-│   │   └── core_storage/      # Serviço de armazenamento
+│   │   ├── core_storage/      # Serviço de armazenamento
+│   │   ├── core_logging/      # Serviço de logging
+│   │   ├── core_feature_flags/ # Feature flags
+│   │   └── core_communication/ # Comunicação entre micro apps
 │   │
-│   ├── micro_apps/            # Micro apps
-│   │   ├── account/           # Micro app de conta
-│   │   ├── auth/              # Micro app de autenticação
-│   │   ├── cards/             # Micro app de cartões
-│   │   ├── dashboard/         # Micro app de dashboard
-│   │   ├── payments/          # Micro app de pagamentos
-│   │   └── pix/               # Micro app de Pix
-│   │
-│   └── shared/                # Pacotes compartilhados
-│       ├── design_system/     # Design system
-│       └── shared_utils/      # Utilitários compartilhados
+│   └── micro_apps/            # Micro apps
+│       ├── account/           # Micro app de conta
+│       ├── auth/              # Micro app de autenticação
+│       ├── cards/             # Micro app de cartões
+│       ├── dashboard/         # Micro app de dashboard
+│       ├── payments/          # Micro app de pagamentos
+│       ├── pix/               # Micro app de Pix
+│       └── splash/            # Micro app de splash screen
 │
 └── super_app/                 # Aplicativo principal
+    ├── lib/
+    │   ├── core/              # Implementações core do super app
+    │   │   ├── di/            # Injeção de dependências
+    │   │   ├── router/        # Configuração de rotas
+    │   │   ├── services/      # Serviços compartilhados 
+    │   │   ├── theme/         # Configurações de tema
+    │   │   └── widgets/       # Widgets compartilhados
+    │   └── main.dart          # Ponto de entrada
+    └── test/                  # Testes
 ```
 
-## Funcionalidades Principais
+## Funcionalidades Implementadas
 
-- **Autenticação Segura**: Login com email/senha e opções de login social
-- **Dashboard Personalizado**: Visão geral das finanças com resumo de conta e transações recentes
-- **Transferências e Pagamentos**: Transferências entre contas e pagamento de contas
-- **Pix**: Transferências instantâneas via Pix
-- **Gestão de Cartões**: Visualização e gerenciamento de cartões de crédito e débito
-- **Extrato da Conta**: Histórico detalhado de transações
+- **Autenticação**: Login com email/senha e credenciais mockadas
+- **Dashboard**: Exibição de sumário de contas e transações
+- **Payments**: Gerenciamento de pagamentos
+- **Pix**: Transferências via Pix e gestão de chaves
+- **Cards**: Gerenciamento de cartões
+- **Account**: Detalhes e extrato da conta
 
-## Design Premium
+## Soluções Arquiteturais
 
-O aplicativo utiliza um tema premium com as seguintes características:
+### Inicialização de Micro Apps Sob Demanda
 
-- **Cores**: Preto e dourado para transmitir sofisticação e exclusividade
-- **Tema Escuro**: Configurado como padrão para uma experiência visual premium
-- **Interface Limpa**: Tela de login sem barra de navegação para uma experiência imersiva
-- **Ícones Destacados**: Botões de login social com fundo dourado para destaque visual
+Um dos destaques deste projeto é o sistema de inicialização de micro apps sob demanda, implementado através de um middleware de rotas. Este sistema:
 
-## Arquitetura
+1. Detecta automaticamente qual micro app é necessário para uma determinada rota
+2. Verifica se o micro app já está inicializado e em um estado válido
+3. Inicializa o micro app se necessário, ou reinicializa em caso de estado inválido
+4. Gerencia corretamente os recursos para evitar memory leaks
 
-A arquitetura do projeto segue os princípios de Clean Architecture, com as seguintes camadas:
+```dart
+// Exemplo do middleware que inicializa micro apps sob demanda
+class MicroAppInitializerMiddleware {
+  // ...
+  
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) async {
+    final path = state.matchedLocation;
+    final microAppName = _getMicroAppNameForRoute(path);
+    
+    if (microAppName != null) {
+      // Se este micro app está sendo reinicializado, redirecione para o dashboard
+      if (_microAppsBeingReinitialized.contains(microAppName)) {
+        return '/dashboard';
+      }
+      
+      try {
+        final microApp = _getIt<MicroApp>(instanceName: microAppName);
+        
+        // Verifica se o micro app está em um estado válido
+        if (microApp.isInitialized) {
+          try {
+            microApp.build(context);
+            return null; // Continue para a rota original
+          } catch (e) {
+            // O micro app está em estado inválido, necessita reinicialização
+            needsReinitialization = true;
+          }
+        }
+        
+        // Inicializa ou reinicializa o micro app
+        if (!microApp.isInitialized || needsReinitialization) {
+          // Processo de inicialização...
+        }
+        
+        return null;
+      } catch (e) {
+        return '/error';
+      }
+    }
+    
+    return null;
+  }
+}
+```
 
-1. **Domain**: Contém as entidades, casos de uso e interfaces de repositórios.
-2. **Data**: Implementa os repositórios e fontes de dados.
-3. **Presentation**: Implementa a interface do usuário e a lógica de apresentação.
+### Gerenciamento Robusto de Estado com BLoC/Cubit
 
-Cada micro app segue essa estrutura, garantindo a independência e a testabilidade.
+Para resolver problemas comuns como "Cannot emit new states after calling close", implementamos um sistema robusto de gerenciamento de ciclo de vida para os Blocs e Cubits:
+
+1. Verificação de estado dos Blocs/Cubits antes de usá-los
+2. Recriação automática quando um Bloc/Cubit foi fechado
+3. Tratamento adequado de exceções durante o fechamento
+4. Prevenção de memory leaks
+
+```dart
+// Exemplo de correção para o problema "Cannot emit new states after calling close"
+void _fetchPaymentsSafely() {
+  try {
+    if (mounted) {
+      final cubit = context.read<PaymentsCubit>();
+      
+      // Verificar se o estado atual é válido (não está fechado)
+      cubit.state;
+      
+      // Se chegou aqui, o cubit está em um estado válido
+      cubit.fetchPayments();
+    }
+  } catch (e) {
+    debugPrint('Erro ao carregar pagamentos: $e');
+    // Não propagamos o erro para evitar crash da UI
+  }
+}
+```
 
 ### Diagrama da Arquitetura
 
 ```mermaid
 graph TD
-    SuperApp[Super App] --> |Orquestra| MicroApps[Micro Apps]
+    SuperApp[Super App] --> |Inicializa| MicroApps[Micro Apps]
     SuperApp --> |Usa| Core[Core Packages]
-    SuperApp --> |Usa| Shared[Shared Packages]
-
+    
+    Router[GoRouter] --> Middleware[Route Middleware]
+    Middleware --> |Inicializa| MicroApps
+    
     MicroApps --> Auth[Auth]
     MicroApps --> Dashboard[Dashboard]
     MicroApps --> Account[Account]
     MicroApps --> Cards[Cards]
     MicroApps --> Payments[Payments]
     MicroApps --> Pix[Pix]
+    MicroApps --> Splash[Splash]
 
-    subgraph "Camadas de cada Micro App"
-        Presentation[Presentation Layer] --> |Usa| Domain[Domain Layer]
-        Data[Data Layer] --> |Implementa| Domain
+    subgraph "Arquitetura de um Micro App"
+        UI[Presentation Layer] --> |Usa| Bloc[BLoC/Cubit]
+        Bloc --> |Usa| Domain[Domain Layer]
+        Repositories[Repository Layer] --> |Implementa| Domain
+        DataSources[Data Sources] --> |Alimenta| Repositories
     end
 
     Auth --> |Usa| Core
@@ -105,42 +192,87 @@ graph TD
     Cards --> |Usa| Core
     Payments --> |Usa| Core
     Pix --> |Usa| Core
-
-    Auth --> |Usa| Shared
-    Dashboard --> |Usa| Shared
-    Account --> |Usa| Shared
-    Cards --> |Usa| Shared
-    Payments --> |Usa| Shared
-    Pix --> |Usa| Shared
-
+    
     Core --> CoreInterfaces[Core Interfaces]
     Core --> CoreAnalytics[Core Analytics]
     Core --> CoreNetwork[Core Network]
     Core --> CoreStorage[Core Storage]
-
-    Shared --> DesignSystem[Design System]
-    Shared --> SharedUtils[Shared Utils]
+    Core --> CoreLogging[Core Logging]
 ```
-
-## Comunicação entre Micro Apps
-
-A comunicação entre os micro apps é feita através de interfaces definidas no pacote `core_interfaces`. Os micro apps não dependem diretamente uns dos outros, apenas das interfaces.
 
 ## Injeção de Dependências
 
-A injeção de dependências é feita usando o pacote `get_it`. Cada micro app registra suas próprias dependências, e o Super App orquestra a inicialização.
+A injeção de dependências é feita usando o pacote `get_it`. O Super App registra os serviços core e os micro apps, que por sua vez registram suas próprias dependências internas.
 
-## Navegação
+```dart
+// Exemplo de registro de dependências no Super App
+void _registerCoreServices() {
+  sl.registerLazySingleton<NetworkService>(
+    () => NetworkServiceImpl(),
+  );
 
-A navegação é feita usando o pacote `go_router`. Cada micro app define suas próprias rotas, e o Super App orquestra a navegação entre os micro apps.
+  sl.registerLazySingleton<StorageService>(
+    () => kIsWeb ? WebStorageService() : StorageServiceImpl(),
+  );
+  
+  // Mais registros...
+}
 
-## Gerenciamento de Estado
+void _registerMicroApps() {
+  sl.registerLazySingleton<MicroApp>(
+    () => PaymentsMicroApp(),
+    instanceName: 'payments',
+  );
+  
+  sl.registerLazySingleton<MicroApp>(
+    () => PixMicroApp(),
+    instanceName: 'pix',
+  );
+  
+  // Outros micro apps...
+}
+```
 
-O gerenciamento de estado é feito usando o pacote `flutter_bloc`. Cada micro app define seus próprios blocs, e o Super App orquestra o estado global.
+## Navegação entre Micro Apps
 
-## Design System
+A navegação é implementada usando o pacote `go_router`. Cada micro app define suas próprias rotas, e o Super App as orquestra através do `AppRouter`.
 
-O design system é implementado no pacote `design_system` e fornece componentes compartilhados entre os micro apps.
+```dart
+// Exemplo de configuração de rotas
+GoRouter _createRouter() {
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: '/',
+    debugLogDiagnostics: true,
+    redirect: _microAppInitializer.redirect,
+    routes: [
+      // Rota inicial
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const SplashPage(),
+      ),
+      
+      // Página de erro
+      GoRoute(
+        path: '/error',
+        builder: (context, state) => const ErrorPage(),
+      ),
+
+      // Rotas dos micro apps
+      ..._getMicroAppRoutes(),
+    ],
+    errorBuilder: _buildErrorPage,
+    observers: _observers,
+  );
+}
+```
+
+## Credenciais de Teste
+
+Para testar o aplicativo, você pode usar:
+
+- **Email**: `user@example.com`
+- **Senha**: `password`
 
 ## Começando
 
@@ -148,98 +280,49 @@ O design system é implementado no pacote `design_system` e fornece componentes 
 
 - Flutter 3.19+
 - Dart 3.3+
-- Melos (`dart pub global activate melos`)
 
-### Configuração
+### Instalação
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/flutter_arqt.git
-   cd flutter_arqt
+   git clone https://github.com/cristianoaredes/super-app-flutter-sample.git
+   cd super-app-flutter-sample
    ```
 
-2. Configure os pacotes com Melos:
+2. Instale as dependências:
    ```bash
-   melos bootstrap
+   flutter pub get
+   cd super_app
+   flutter pub get
    ```
 
-3. Gere o código:
-   ```bash
-   melos run build_runner
-   ```
-
-4. Execute o aplicativo:
+3. Execute o aplicativo:
    ```bash
    cd super_app
    flutter run
    ```
 
-### Credenciais de Teste
+## Melhorias Recentes
 
-Para testar o aplicativo, use as seguintes credenciais:
+- **Correção do erro "Cannot emit new states after calling close"**: Implementamos um sistema robusto para gerenciar o ciclo de vida dos Blocs/Cubits e prevenir emissão de estados após fechamento.
+- **Middleware de inicialização automática**: Criamos um middleware de rotas que inicializa automaticamente os micro apps sob demanda.
+- **Recuperação de estados inválidos**: Adicionamos mecanismos para detectar e recuperar de estados inválidos de micro apps.
 
-- **Email**: `user@example.com`
-- **Senha**: `password`
+## Próximos Passos
 
-Além disso, você pode usar os botões de login social (Google, Apple, Facebook) para simular o login com essas plataformas.
-
-## Dados de Demonstração
-
-O aplicativo utiliza dados simulados (mock data) para demonstrar as funcionalidades:
-
-- **Contas**: Conta corrente e poupança com saldos simulados
-- **Transações**: Histórico de transações simuladas
-- **Cartões**: Cartões de crédito e débito simulados
-- **Pix**: Chaves Pix e transações Pix simuladas
-
-Em um ambiente de produção, esses dados seriam obtidos de uma API real.
-
-## Melhorias Futuras
-
-- **Biometria**: Implementação de autenticação biométrica
-- **Notificações Push**: Alertas para transações e atividades da conta
-- **Investimentos**: Módulo para gestão de investimentos
-- **Suporte ao Cliente**: Chat integrado para suporte
-- **Personalização**: Opções de personalização do tema e da interface
-
-## Fluxo de Desenvolvimento
-
-1. Desenvolva MicroApps de forma independente seguindo a estrutura de Clean Architecture
-2. Use Melos para gerenciar dependências e versões
-3. Execute testes em todos os pacotes com `melos run test`
-4. Integre os MicroApps no Super App através das interfaces definidas
-
-## Testes
-
-O projeto inclui testes em vários níveis:
-
-1. **Testes Unitários**: Testam a lógica de negócios e os casos de uso
-2. **Testes de Widget**: Testam os componentes de UI
-3. **Testes de Integração**: Testam a integração entre os micro apps
-
-Para executar os testes:
-
-```bash
-melos run test
-```
-
-## CI/CD
-
-O projeto inclui configuração para GitHub Actions que:
-
-1. Executa análise estática e testes
-2. Constrói versões para Android e iOS
-3. Publica pacotes no servidor pub privado
+- Adicionar testes unitários e de widget
+- Implementar CI/CD com GitHub Actions
+- Adicionar autenticação biométrica
+- Implementar suporte a temas claros/escuros
 
 ## Contribuindo
 
-1. Crie um fork do repositório
+1. Faça um fork do projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
 3. Faça commit das suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Envie para a branch (`git push origin feature/nova-feature`)
+4. Faça push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
 ## Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
-# super-app-flutter-sample
