@@ -332,6 +332,39 @@ Este projeto está atualmente em desenvolvimento ativo (Work In Progress). Estam
 - Melhorar a responsividade da interface
 - Implementar integração com APIs reais
 
+## Screenshots do App
+
+<table>
+  <tr>
+    <td align="center"><b>Login</b></td>
+    <td align="center"><b>Dashboard</b></td>
+    <td align="center"><b>Menu</b></td>
+    <td align="center"><b>Lista de Cartões</b></td>
+    <td align="center"><b>Detalhes do Cartão</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/tela1.png" width="150" alt="Tela de Login"/></td>
+    <td><img src="docs/screenshots/tela2.png" width="150" alt="Tela de Dashboard"/></td>
+    <td><img src="docs/screenshots/tela3.png" width="150" alt="Tela de Menu"/></td>
+    <td><img src="docs/screenshots/tela4.png" width="150" alt="Lista de Cartões"/></td>
+    <td><img src="docs/screenshots/tela4.1.png" width="150" alt="Detalhes do Cartão"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Área Pix</b></td>
+    <td align="center"><b>Transferência Pix</b></td>
+    <td align="center"><b>Chaves Pix</b></td>
+    <td align="center"><b>Pagamentos</b></td>
+    <td align="center"><b>Novo Pagamento</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/tela5.png" width="150" alt="Área Pix"/></td>
+    <td><img src="docs/screenshots/tela5.1.png" width="150" alt="Transferência Pix"/></td>
+    <td><img src="docs/screenshots/tela5.2.png" width="150" alt="Chaves Pix"/></td>
+    <td><img src="docs/screenshots/tela6.png" width="150" alt="Tela de Pagamentos"/></td>
+    <td><img src="docs/screenshots/tela6.1.png" width="150" alt="Novo Pagamento"/></td>
+  </tr>
+</table>
+
 ## Contribuindo
 
 1. Faça um fork do projeto
@@ -343,39 +376,3 @@ Este projeto está atualmente em desenvolvimento ativo (Work In Progress). Estam
 ## Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
-
-## Screenshots do App
-
-### Fluxo Principal
-<div align="center">
-  <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela1.png" width="230" alt="Tela de Login" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela2.png" width="230" alt="Tela de Dashboard" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela3.png" width="230" alt="Tela de Menu"/>
-  </div>
-</div>
-
-### Cartões
-<div align="center">
-  <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela4.png" width="230" alt="Lista de Cartões" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela4.1.png" width="230" alt="Detalhes do Cartão"/>
-  </div>
-</div>
-
-### Área Pix
-<div align="center">
-  <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela5.png" width="230" alt="Área Pix" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela5.1.png" width="230" alt="Transferência Pix" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela5.2.png" width="230" alt="Chaves Pix"/>
-  </div>
-</div>
-
-### Pagamentos
-<div align="center">
-  <div style="display: flex; align-items: flex-start; justify-content: center;">
-    <img src="docs/screenshots/tela6.png" width="230" alt="Tela de Pagamentos" style="margin-right: 10px;"/>
-    <img src="docs/screenshots/tela6.1.png" width="230" alt="Novo Pagamento"/>
-  </div>
-</div>
