@@ -221,9 +221,8 @@ This project is currently under active development (Work In Progress). We are co
 
 For suggestions, questions, or contributions:
 
-- 📧 Email: your.email@example.com
-- 💼 LinkedIn: [Your LinkedIn](https://linkedin.com/in/your-profile)
-- 🐦 Twitter: [@your_twitter](https://twitter.com/your_profile)
+- 📧 Email: cristiano@aredes.me
+- 💼 LinkedIn: [Cristiano Aredes](https://www.linkedin.com/in/cristianoaredes/)
 
 ## ⭐ Show your support
 
