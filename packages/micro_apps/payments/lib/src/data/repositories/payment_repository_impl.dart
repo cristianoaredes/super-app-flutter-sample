@@ -4,21 +4,23 @@ import '../../domain/entities/payment.dart';
 import '../../domain/repositories/payment_repository.dart';
 import '../models/payment_model.dart';
 import '../datasources/payment_remote_data_source.dart';
-
+import '../datasources/payment_mock_datasource.dart';
 
 class PaymentRepositoryImpl implements PaymentRepository {
   final PaymentRemoteDataSource _remoteDataSource;
   final AuthService _authService;
+  final bool _isMockMode;
 
   PaymentRepositoryImpl({
     required PaymentRemoteDataSource remoteDataSource,
     required AuthService authService,
   })  : _remoteDataSource = remoteDataSource,
-        _authService = authService;
+        _authService = authService,
+        _isMockMode = remoteDataSource is PaymentMockDataSource;
 
   @override
   Future<List<Payment>> getPayments() async {
-    if (!await _isAuthenticated()) {
+    if (!_isMockMode && !await _isAuthenticated()) {
       throw Exception('User not authenticated');
     }
 
@@ -28,7 +30,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<Payment?> getPaymentById(String id) async {
-    if (!await _isAuthenticated()) {
+    if (!_isMockMode && !await _isAuthenticated()) {
       throw Exception('User not authenticated');
     }
 
@@ -38,7 +40,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<Payment> makePayment(Payment payment) async {
-    if (!await _isAuthenticated()) {
+    if (!_isMockMode && !await _isAuthenticated()) {
       throw Exception('User not authenticated');
     }
 
@@ -49,7 +51,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<bool> cancelPayment(String id) async {
-    if (!await _isAuthenticated()) {
+    if (!_isMockMode && !await _isAuthenticated()) {
       throw Exception('User not authenticated');
     }
 

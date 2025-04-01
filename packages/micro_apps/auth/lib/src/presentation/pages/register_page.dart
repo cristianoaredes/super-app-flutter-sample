@@ -7,7 +7,6 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_button.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -77,7 +76,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             );
           } else if (state is RegisterSuccessState) {
-            
             Navigator.of(context).pushReplacementNamed('/dashboard');
           }
         },
@@ -90,7 +88,27 @@ class _RegisterPageState extends State<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 32.0),
-                  const FlutterLogo(size: 80.0), 
+                  Center(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.account_balance,
+                          size: 64,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'PREMIUM BANK',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 32.0),
                   const Text(
                     'Crie sua conta',

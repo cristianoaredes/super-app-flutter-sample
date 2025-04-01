@@ -1,10 +1,11 @@
-# super-app-flutter-sample
+# Premium Bank - Flutter Super App (WIP)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.19+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter Version" />
-  <img src="https://img.shields.io/badge/Dart-3.3+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart Version" />
+  <img src="https://img.shields.io/badge/Flutter-3.29.2-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter Version" />
+  <img src="https://img.shields.io/badge/Dart-3.7.2-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart Version" />
   <img src="https://img.shields.io/badge/Architecture-Modular-brightgreen?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/State-BLoC/Cubit-blue?style=for-the-badge" alt="State Management" />
+  <img src="https://img.shields.io/badge/Status-WIP-yellow?style=for-the-badge" alt="Status" />
 </p>
 
 Este projeto implementa uma arquitetura modular para Flutter usando o conceito de micro apps, com foco na inicialização sob demanda, gerenciamento de ciclo de vida de componentes e comunicação entre módulos independentes.
@@ -19,12 +20,14 @@ Este projeto implementa uma arquitetura modular para Flutter usando o conceito d
 
 ## Tecnologias Principais
 
-- **Flutter**: 3.19+
-- **Dart**: 3.3+
-- **Gerenciamento de Estado**: bloc com flutter_bloc e hydrated_bloc
-- **Injeção de Dependência**: get_it
-- **Navegação**: go_router
-- **Código Gerado**: freezed e json_serializable
+- **Flutter**: 3.29.2
+- **Dart**: 3.7.2
+- **Gerenciamento de Estado**: bloc 8.1.6 com flutter_bloc e hydrated_bloc 9.1.5
+- **Injeção de Dependência**: get_it 7.7.0
+- **Navegação**: go_router 12.1.3
+- **Código Gerado**: freezed 2.5.8 e json_serializable 6.8.0
+- **Armazenamento**: shared_preferences 2.2.3 e path_provider 2.1.4
+- **Rede**: http 1.2.2 e dio 5.3.3
 
 ## Estrutura do Projeto
 
@@ -60,7 +63,7 @@ flutter_arqt/
     │   ├── core/              # Implementações core do super app
     │   │   ├── di/            # Injeção de dependências
     │   │   ├── router/        # Configuração de rotas
-    │   │   ├── services/      # Serviços compartilhados 
+    │   │   ├── services/      # Serviços compartilhados
     │   │   ├── theme/         # Configurações de tema
     │   │   └── widgets/       # Widgets compartilhados
     │   └── main.dart          # Ponto de entrada
@@ -91,20 +94,20 @@ Um dos destaques deste projeto é o sistema de inicialização de micro apps sob
 // Exemplo do middleware que inicializa micro apps sob demanda
 class MicroAppInitializerMiddleware {
   // ...
-  
+
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) async {
     final path = state.matchedLocation;
     final microAppName = _getMicroAppNameForRoute(path);
-    
+
     if (microAppName != null) {
       // Se este micro app está sendo reinicializado, redirecione para o dashboard
       if (_microAppsBeingReinitialized.contains(microAppName)) {
         return '/dashboard';
       }
-      
+
       try {
         final microApp = _getIt<MicroApp>(instanceName: microAppName);
-        
+
         // Verifica se o micro app está em um estado válido
         if (microApp.isInitialized) {
           try {
@@ -115,18 +118,18 @@ class MicroAppInitializerMiddleware {
             needsReinitialization = true;
           }
         }
-        
+
         // Inicializa ou reinicializa o micro app
         if (!microApp.isInitialized || needsReinitialization) {
           // Processo de inicialização...
         }
-        
+
         return null;
       } catch (e) {
         return '/error';
       }
     }
-    
+
     return null;
   }
 }
@@ -147,10 +150,10 @@ void _fetchPaymentsSafely() {
   try {
     if (mounted) {
       final cubit = context.read<PaymentsCubit>();
-      
+
       // Verificar se o estado atual é válido (não está fechado)
       cubit.state;
-      
+
       // Se chegou aqui, o cubit está em um estado válido
       cubit.fetchPayments();
     }
@@ -167,10 +170,10 @@ void _fetchPaymentsSafely() {
 graph TD
     SuperApp[Super App] --> |Inicializa| MicroApps[Micro Apps]
     SuperApp --> |Usa| Core[Core Packages]
-    
+
     Router[GoRouter] --> Middleware[Route Middleware]
     Middleware --> |Inicializa| MicroApps
-    
+
     MicroApps --> Auth[Auth]
     MicroApps --> Dashboard[Dashboard]
     MicroApps --> Account[Account]
@@ -192,7 +195,7 @@ graph TD
     Cards --> |Usa| Core
     Payments --> |Usa| Core
     Pix --> |Usa| Core
-    
+
     Core --> CoreInterfaces[Core Interfaces]
     Core --> CoreAnalytics[Core Analytics]
     Core --> CoreNetwork[Core Network]
@@ -214,7 +217,7 @@ void _registerCoreServices() {
   sl.registerLazySingleton<StorageService>(
     () => kIsWeb ? WebStorageService() : StorageServiceImpl(),
   );
-  
+
   // Mais registros...
 }
 
@@ -223,12 +226,12 @@ void _registerMicroApps() {
     () => PaymentsMicroApp(),
     instanceName: 'payments',
   );
-  
+
   sl.registerLazySingleton<MicroApp>(
     () => PixMicroApp(),
     instanceName: 'pix',
   );
-  
+
   // Outros micro apps...
 }
 ```
@@ -251,7 +254,7 @@ GoRouter _createRouter() {
         path: '/',
         builder: (context, state) => const SplashPage(),
       ),
-      
+
       // Página de erro
       GoRoute(
         path: '/error',
@@ -278,8 +281,11 @@ Para testar o aplicativo, você pode usar:
 
 ### Pré-requisitos
 
-- Flutter 3.19+
-- Dart 3.3+
+- Flutter 3.29.2
+- Dart 3.7.2
+- Java 17+ (para Android)
+- Xcode 14+ (para iOS)
+- Android Studio 2023.1+ ou VS Code com extensões Flutter/Dart
 
 ### Instalação
 
@@ -302,11 +308,20 @@ Para testar o aplicativo, você pode usar:
    flutter run
    ```
 
+## Status do Projeto (WIP)
+
+Este projeto está atualmente em desenvolvimento ativo (Work In Progress). Estamos implementando novas funcionalidades e melhorias continuamente.
+
 ## Melhorias Recentes
 
+- **Atualização para Flutter 3.29.2**: Atualizamos o projeto para a versão mais recente e estável do Flutter.
+- **Atualização das Dependências**: Atualizamos todas as dependências para as versões mais recentes compatíveis.
+- **Compatibilidade com Java 17+**: Configuramos o projeto para ser compatível com o Java 17 e versões superiores.
 - **Correção do erro "Cannot emit new states after calling close"**: Implementamos um sistema robusto para gerenciar o ciclo de vida dos Blocs/Cubits e prevenir emissão de estados após fechamento.
 - **Middleware de inicialização automática**: Criamos um middleware de rotas que inicializa automaticamente os micro apps sob demanda.
 - **Recuperação de estados inválidos**: Adicionamos mecanismos para detectar e recuperar de estados inválidos de micro apps.
+- **Mudança de nome para Premium Bank**: Alteramos o nome do aplicativo para "Premium Bank" em todas as plataformas.
+- **Adição de permissões**: Adicionamos permissões necessárias para câmera, armazenamento, localização e biometria.
 
 ## Próximos Passos
 
@@ -314,6 +329,8 @@ Para testar o aplicativo, você pode usar:
 - Implementar CI/CD com GitHub Actions
 - Adicionar autenticação biométrica
 - Implementar suporte a temas claros/escuros
+- Melhorar a responsividade da interface
+- Implementar integração com APIs reais
 
 ## Contribuindo
 
@@ -326,3 +343,25 @@ Para testar o aplicativo, você pode usar:
 ## Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
+
+## Screenshots do App
+
+<div align="center">
+  <div style="display: flex; align-items: flex-start; justify-content: center;">
+    <img src="docs/screenshots/tela1.png" width="230" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela2.png" width="230" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela3.png" width="230"/>
+  </div>
+  <br/>
+  <div style="display: flex; align-items: flex-start; justify-content: center;">
+    <img src="docs/screenshots/tela4.png" width="230" style="margin-right: 10px;"/>
+    <img src="docs/screenshots/tela5.png" width="230"/>
+  </div>
+</div>
+
+### Funcionalidade Pix
+
+<p align="center">
+  <img src="docs/screenshots/pix_home.png" width="250" alt="Home do Pix">
+  <img src="docs/screenshots/pix_enviar.png" width="250" alt="Enviar Pix">
+</p>

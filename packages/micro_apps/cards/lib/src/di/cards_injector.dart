@@ -1,6 +1,7 @@
 import 'package:core_interfaces/core_interfaces.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
 
 import '../data/datasources/cards_remote_datasource.dart';
 import '../data/datasources/cards_local_datasource.dart';
@@ -12,17 +13,14 @@ import '../domain/usecases/get_card_statement_usecase.dart';
 import '../domain/usecases/block_card_usecase.dart';
 import '../domain/usecases/unblock_card_usecase.dart';
 import '../presentation/bloc/cards_bloc.dart';
-
+import '../presentation/bloc/card_details_bloc.dart';
 
 class CardsInjector {
-  
   static void register(GetIt getIt) {
-    
     if (kDebugMode) {
       print('🌐 Registrando CardsRemoteDataSource');
     }
 
-    
     final appConfig = getIt<AppConfig>();
     final useMockData = appConfig.getValue<bool>('mock_data') ?? false;
 
@@ -49,7 +47,6 @@ class CardsInjector {
       ),
     );
 
-    
     getIt.registerLazySingleton<CardsRepository>(
       () => CardsRepositoryImpl(
         remoteDataSource: getIt<CardsRemoteDataSource>(),
@@ -58,7 +55,6 @@ class CardsInjector {
       ),
     );
 
-    
     getIt.registerLazySingleton(
       () => GetCardsUseCase(
         repository: getIt<CardsRepository>(),
@@ -83,9 +79,19 @@ class CardsInjector {
       ),
     );
 
-    
-    getIt.registerFactory(
-      () => CardsBloc(
+    // Registra o CardsBloc como singleton
+    if (!getIt.isRegistered<CardsBloc>()) {
+      getIt.registerLazySingleton<CardsBloc>(
+        () => CardsBloc(
+          getCardsUseCase: getIt<GetCardsUseCase>(),
+          analyticsService: getIt<AnalyticsService>(),
+        ),
+      );
+    }
+
+    // Registra o CardDetailsBloc como factory (nova instância para cada detalhe)
+    getIt.registerFactory<CardDetailsBloc>(
+      () => CardDetailsBloc(
         getCardsUseCase: getIt<GetCardsUseCase>(),
         getCardStatementUseCase: getIt<GetCardStatementUseCase>(),
         blockCardUseCase: getIt<BlockCardUseCase>(),
@@ -93,5 +99,12 @@ class CardsInjector {
         analyticsService: getIt<AnalyticsService>(),
       ),
     );
+
+    // RouteObserver
+    if (!getIt.isRegistered<RouteObserver<ModalRoute<void>>>()) {
+      getIt.registerLazySingleton<RouteObserver<ModalRoute<void>>>(
+        () => RouteObserver<ModalRoute<void>>(),
+      );
+    }
   }
 }

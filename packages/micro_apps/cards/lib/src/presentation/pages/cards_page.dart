@@ -10,7 +10,6 @@ import '../bloc/cards_event.dart';
 import '../bloc/cards_state.dart';
 import '../widgets/card_item.dart';
 
-
 class CardsPage extends StatefulWidget {
   const CardsPage({super.key});
 
@@ -18,15 +17,49 @@ class CardsPage extends StatefulWidget {
   State<CardsPage> createState() => _CardsPageState();
 }
 
-class _CardsPageState extends State<CardsPage> {
+class _CardsPageState extends State<CardsPage>
+    with AutomaticKeepAliveClientMixin, RouteAware {
+  late final CardsBloc _cardsBloc;
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
-    context.read<CardsBloc>().add(const LoadCardsEvent());
+    _cardsBloc = GetIt.instance<CardsBloc>();
+    _ensureDataLoaded();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    GetIt.instance<RouteObserver<ModalRoute<void>>>()
+        .subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    GetIt.instance<RouteObserver<ModalRoute<void>>>().unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    if (mounted) {
+      _refreshCards();
+    }
+  }
+
+  void _ensureDataLoaded() {
+    if (!_cardsBloc.isInitialized) {
+      _cardsBloc.add(const LoadCardsEvent());
+    }
   }
 
   void _refreshCards() {
-    context.read<CardsBloc>().add(const RefreshCardsEvent());
+    if (!mounted) return;
+    _cardsBloc.add(const RefreshCardsEvent());
   }
 
   void _navigateToCardDetails(String cardId) {
@@ -36,76 +69,97 @@ class _CardsPageState extends State<CardsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meus Cartões'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _refreshCards,
-          ),
-        ],
-      ),
-      body: BlocBuilder<CardsBloc, CardsState>(
-        builder: (context, state) {
-          if (state is CardsInitialState || state is CardsLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    super.build(context);
 
-          if (state is CardsLoadingWithDataState) {
-            return _buildCardsList(context, state.cards, isLoading: true);
-          }
-
-          if (state is CardsLoadedState) {
-            return _buildCardsList(context, state.cards);
-          }
-
-          if (state is CardsErrorState) {
-            if (state.cards != null && state.cards!.isNotEmpty) {
-              return _buildCardsList(context, state.cards,
-                  errorMessage: state.message);
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Meus Cartões'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _refreshCards,
+            ),
+          ],
+        ),
+        body: BlocConsumer<CardsBloc, CardsState>(
+          bloc: _cardsBloc,
+          listenWhen: (previous, current) {
+            return current is CardsErrorState &&
+                (previous is! CardsErrorState ||
+                    previous.message != current.message);
+          },
+          listener: (context, state) {
+            if (state is CardsErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              );
+            }
+          },
+          buildWhen: (previous, current) {
+            if (current is CardsLoadingWithDataState &&
+                previous is CardsLoadedState) {
+              return false;
+            }
+            return true;
+          },
+          builder: (context, state) {
+            if (state is CardsInitialState) {
+              return const Center(child: CircularProgressIndicator());
             }
 
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Erro ao carregar os cartões',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _refreshCards,
-                    child: const Text('Tentar novamente'),
-                  ),
-                ],
-              ),
-            );
-          }
+            if (state is CardsLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          return const SizedBox.shrink();
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          
-        },
-        child: const Icon(Icons.add),
+            if (state is CardsLoadingWithDataState) {
+              return _buildCardsList(context, state.cards, isLoading: true);
+            }
+
+            if (state is CardsLoadedState) {
+              return _buildCardsList(context, state.cards);
+            }
+
+            if (state is CardsErrorState) {
+              if (state.cards != null && state.cards!.isNotEmpty) {
+                return _buildCardsList(context, state.cards,
+                    errorMessage: state.message);
+              }
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Erro ao carregar os cartões',
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 8),
+                    Text(state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _refreshCards,
+                      child: const Text('Tentar novamente'),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -139,9 +193,7 @@ class _CardsPageState extends State<CardsPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                
-              },
+              onPressed: () {},
               child: const Text('Adicionar Cartão'),
             ),
           ],
@@ -154,7 +206,7 @@ class _CardsPageState extends State<CardsPage> {
         RefreshIndicator(
           onRefresh: () async {
             _refreshCards();
-            
+
             await Future.delayed(const Duration(seconds: 1));
           },
           child: ListView(

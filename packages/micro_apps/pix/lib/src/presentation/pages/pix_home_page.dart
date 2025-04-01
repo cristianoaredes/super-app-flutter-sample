@@ -147,227 +147,172 @@ class _PixHomePageState extends State<PixHomePage>
               const SizedBox(height: 24.0),
               BlocBuilder<PixBloc, PixState>(
                 builder: (context, state) {
-                  if (state is PixKeysLoadingState) {
-                    return const Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    );
-                  }
+                  // Verificar se o estado é um PixCompositeState
+                  if (state is PixCompositeState) {
+                    final keysState = state.keysState;
+                    final transactionsState = state.transactionsState;
 
-                  if (state is PixKeysLoadedState) {
-                    return Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Minhas Chaves',
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Card das Chaves Pix
+                        if (keysState is PixKeysLoadingState)
+                          const Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          )
+                        else if (keysState is PixKeysLoadedState)
+                          Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Minhas Chaves',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: _navigateToPixKeys,
+                                        child: const Text('Ver todas'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  if (keysState.keys.isEmpty)
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 16.0),
+                                      child: Center(
+                                        child: Text(
+                                          'Você ainda não possui chaves Pix cadastradas',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: keysState.keys.length > 3
+                                          ? 3
+                                          : keysState.keys.length,
+                                      itemBuilder: (context, index) {
+                                        final key = keysState.keys[index];
+                                        return ListTile(
+                                          title: Text(key.value),
+                                          subtitle: Text(key.type.toString()),
+                                          leading: _getPixKeyTypeIcon(key.type),
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          )
+                        else if (keysState is PixKeysErrorState)
+                          Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Center(
+                                child: Text(
+                                  'Erro ao carregar chaves: ${keysState.message}',
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.error,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: _navigateToPixKeys,
-                                  child: const Text('Ver todas'),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8.0),
-                            if (state.keys.isEmpty)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16.0),
-                                child: Center(
-                                  child: Text(
-                                    'Você ainda não possui chaves Pix cadastradas',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              )
-                            else
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.keys.length > 3
-                                    ? 3
-                                    : state.keys.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(),
-                                itemBuilder: (context, index) {
-                                  final key = state.keys[index];
-                                  return ListTile(
-                                    title: Text(key.formattedName),
-                                    subtitle: Text(key.formattedValue),
-                                    leading: _getPixKeyTypeIcon(key.type),
-                                  );
-                                },
                               ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
+                            ),
+                          ),
 
-                  if (state is PixKeysErrorState) {
-                    return Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Minhas Chaves',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
+                        const SizedBox(height: 24.0),
+
+                        // Card das Transações
+                        if (transactionsState is PixTransactionsLoadingState)
+                          const Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Center(
+                                child: CircularProgressIndicator(),
                               ),
                             ),
-                            const SizedBox(height: 16.0),
-                            Center(
+                          )
+                        else if (transactionsState
+                            is PixTransactionsLoadedState)
+                          Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Icon(
-                                    Icons.error_outline,
-                                    color: Colors.red,
-                                    size: 48.0,
+                                  const Text(
+                                    'Histórico de Transações',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Erro ao carregar as chaves: ${state.message}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _loadDataSafely();
-                                    },
-                                    child: const Text('Tentar novamente'),
-                                  ),
+                                  const SizedBox(height: 16.0),
+                                  if (transactionsState.transactions.isEmpty)
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 16.0),
+                                      child: Center(
+                                        child: Text(
+                                          'Nenhuma transação Pix realizada',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    PixTransactionList(
+                                      transactions:
+                                          transactionsState.transactions,
+                                    ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  return const Card(
-                    elevation: 2.0,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24.0),
-              BlocBuilder<PixBloc, PixState>(
-                builder: (context, state) {
-                  if (state is PixTransactionsLoadingState) {
-                    return const Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (state is PixTransactionsLoadedState) {
-                    return Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Histórico de Transações',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
+                          )
+                        else if (transactionsState is PixTransactionsErrorState)
+                          Card(
+                            elevation: 2.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Center(
+                                child: Text(
+                                  'Erro ao carregar transações: ${transactionsState.message}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 16.0),
-                            PixTransactionList(
-                              transactions: state.transactions,
-                              maxItems: 5,
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                      ],
                     );
                   }
 
-                  if (state is PixTransactionsErrorState) {
-                    return Card(
-                      elevation: 2.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Histórico de Transações',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            Center(
-                              child: Column(
-                                children: [
-                                  const Icon(
-                                    Icons.error_outline,
-                                    color: Colors.red,
-                                    size: 48.0,
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Erro ao carregar as transações: ${state.message}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _loadDataSafely();
-                                    },
-                                    child: const Text('Tentar novamente'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  return const Card(
-                    elevation: 2.0,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
               ),
@@ -408,7 +353,7 @@ class _PixHomePageState extends State<PixHomePage>
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: iconColor.withOpacity(0.1),
+        color: iconColor.withAlpha(25),
         shape: BoxShape.circle,
       ),
       child: Icon(

@@ -33,25 +33,34 @@ class PixMicroApp implements MicroApp {
   PixBloc get pixBloc {
     _ensureInitialized();
 
-    // Se o bloc for nulo, tente recriá-lo
-    if (_pixBloc == null) {
-      try {
-        _pixBloc = _getIt<PixBloc>();
-      } catch (e) {
-        debugPrint('Erro ao obter PixBloc do GetIt: $e');
-        // Se não conseguiu obter do GetIt, tente reinicializar
-        if (_dependencies != null) {
-          PixInjector.register(_getIt);
-          try {
-            _pixBloc = _getIt<PixBloc>();
-          } catch (e) {
-            debugPrint('Erro ao recriar PixBloc: $e');
-            throw StateError('Não foi possível recuperar ou recriar o PixBloc');
-          }
-        } else {
-          throw StateError(
-              'Não é possível recriar o PixBloc sem as dependências');
+    // Sempre cria uma nova instância do PixBloc para evitar problemas de ciclo de vida
+    try {
+      // Fecha o bloc anterior se existir
+      if (_pixBloc != null) {
+        try {
+          _pixBloc!.close();
+        } catch (e) {
+          // Ignora erros ao fechar
+          debugPrint('Erro ao fechar PixBloc anterior: $e');
         }
+      }
+
+      // Cria uma nova instância
+      _pixBloc = _getIt<PixBloc>();
+    } catch (e) {
+      debugPrint('Erro ao obter PixBloc do GetIt: $e');
+      // Se não conseguiu obter do GetIt, tente reinicializar
+      if (_dependencies != null) {
+        PixInjector.register(_getIt);
+        try {
+          _pixBloc = _getIt<PixBloc>();
+        } catch (e) {
+          debugPrint('Erro ao recriar PixBloc: $e');
+          throw StateError('Não foi possível recuperar ou recriar o PixBloc');
+        }
+      } else {
+        throw StateError(
+            'Não é possível recriar o PixBloc sem as dependências');
       }
     }
 
@@ -63,42 +72,42 @@ class PixMicroApp implements MicroApp {
         '/pix': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const PixHomePage(),
           );
         },
         '/pix/keys': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const PixKeysPage(),
           );
         },
         '/pix/keys/register': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const RegisterPixKeyPage(),
           );
         },
         '/pix/send': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const SendPixPage(),
           );
         },
         '/pix/receive': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const ReceivePixPage(),
           );
         },
         '/pix/scan': (context, state) {
           _ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: const PixQrCodeScannerPage(),
           );
         },
@@ -106,7 +115,7 @@ class PixMicroApp implements MicroApp {
           _ensureInitialized();
           final id = state.params['id'] ?? '';
           return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+            create: (context) => _getIt<PixBloc>(),
             child: PixTransactionDetailsPage(transactionId: id),
           );
         },
@@ -165,6 +174,15 @@ class PixMicroApp implements MicroApp {
       } finally {
         _pixBloc = null;
       }
+    }
+
+    // Limpa o registro do GetIt para garantir que novas instâncias sejam criadas
+    try {
+      if (_getIt.isRegistered<PixBloc>()) {
+        _getIt.unregister<PixBloc>();
+      }
+    } catch (e) {
+      debugPrint('Erro ao limpar registro do PixBloc: $e');
     }
 
     // Definimos explicitamente como não inicializado após o dispose

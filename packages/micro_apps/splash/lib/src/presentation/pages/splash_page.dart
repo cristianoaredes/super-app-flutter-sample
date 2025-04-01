@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 
 import '../../di/navigation_service_locator.dart';
 
-
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -20,23 +19,17 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _navigateToNextScreen() async {
-    
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    
     final navigationService = NavigationServiceLocator.getNavigationService();
 
-    
     final authService = GetIt.instance<AuthService>();
 
-    
     if (authService.isAuthenticated) {
-      
       navigationService.navigateTo('/dashboard');
     } else {
-      
       navigationService.navigateTo('/login');
     }
   }
@@ -48,7 +41,6 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Container(
               width: 120.0,
               height: 120.0,
@@ -64,7 +56,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
             const SizedBox(height: 24.0),
             Text(
-              'Super App',
+              'Premium Bank',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,

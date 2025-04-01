@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Super App</string>
+	<string>Premium Bank</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>super_app</string>
+	<string>Premium Bank</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,5 +45,27 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Permissões para Câmera -->
+	<key>NSCameraUsageDescription</key>
+	<string>Este aplicativo precisa de acesso à câmera para escanear QR codes e tirar fotos.</string>
+
+	<!-- Permissões para Fotos -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Este aplicativo precisa de acesso às suas fotos para salvar e carregar imagens.</string>
+
+	<!-- Permissões para Localização -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Este aplicativo precisa de acesso à sua localização para fornecer serviços baseados em localização.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Este aplicativo precisa de acesso à sua localização para fornecer serviços baseados em localização.</string>
+
+	<!-- Permissões para Face ID / Touch ID -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>Este aplicativo precisa de acesso à autenticação biométrica para garantir a segurança da sua conta.</string>
+
+	<!-- Permissões para Microfone (caso precise gravar áudio) -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Este aplicativo precisa de acesso ao microfone para gravar áudio.</string>
 </dict>
 </plist>
