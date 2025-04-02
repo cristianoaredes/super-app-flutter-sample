@@ -98,6 +98,87 @@ flutter_arqt/
 - **Cards**: Card management
 - **Account**: Account details and statement
 
+## Architectural Solutions
+
+### On-Demand Micro Apps Initialization
+
+One of the highlights of this project is the on-demand micro apps initialization system, implemented through a route middleware. This system:
+
+1. Automatically detects which micro app is needed for a given route
+2. Checks if the micro app is already initialized and in a valid state
+3. Initializes the micro app if necessary, or reinitializes it in case of invalid state
+4. Properly manages resources to avoid memory leaks
+
+### Robust State Management with BLoC/Cubit
+
+To solve common issues like "Cannot emit new states after calling close", we implemented a robust lifecycle management system for Blocs and Cubits:
+
+1. State verification of Blocs/Cubits before using them
+2. Automatic recreation when a Bloc/Cubit has been closed
+3. Proper exception handling during closure
+4. Memory leak prevention
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    SuperApp[Super App] --> |Initializes| MicroApps[Micro Apps]
+    SuperApp --> |Uses| Core[Core Packages]
+
+    Router[GoRouter] --> Middleware[Route Middleware]
+    Middleware --> |Initializes| MicroApps
+
+    MicroApps --> Auth[Auth]
+    MicroApps --> Dashboard[Dashboard]
+    MicroApps --> Account[Account]
+    MicroApps --> Cards[Cards]
+    MicroApps --> Payments[Payments]
+    MicroApps --> Pix[Pix]
+    MicroApps --> Splash[Splash]
+
+    subgraph "Micro App Architecture"
+        UI[Presentation Layer] --> |Uses| Bloc[BLoC/Cubit]
+        Bloc --> |Uses| Domain[Domain Layer]
+        Repositories[Repository Layer] --> |Implements| Domain
+        DataSources[Data Sources] --> |Feeds| Repositories
+    end
+
+    Auth --> |Uses| Core
+    Dashboard --> |Uses| Core
+    Account --> |Uses| Core
+    Cards --> |Uses| Core
+    Payments --> |Uses| Core
+    Pix --> |Uses| Core
+
+    Core --> CoreInterfaces[Core Interfaces]
+    Core --> CoreAnalytics[Core Analytics]
+    Core --> CoreNetwork[Core Network]
+    Core --> CoreStorage[Core Storage]
+    Core --> CoreLogging[Core Logging]
+```
+
+## Dependency Injection
+
+Dependency injection is done using the `get_it` package. The Super App registers core services and micro apps, which in turn register their own internal dependencies.
+
+The DI system is organized as follows:
+1. Registration of core services (network, storage, analytics, etc.)
+2. Registration of micro apps as lazy singletons
+3. Each micro app registers its own dependencies when initialized
+4. Cleanup system to release resources when a micro app is unloaded
+
+## Navigation between Micro Apps
+
+Navigation is implemented using the `go_router` package. Each micro app defines its own routes, and the Super App orchestrates them through the `AppRouter`.
+
+Main features:
+1. Nested routes for micro apps
+2. Automatic initialization middleware
+3. Failure recovery system
+4. Navigation state management
+5. Deep links support
+6. Custom route transitions
+
 ## Test Credentials
 
 To test the application, you can use:
@@ -208,7 +289,7 @@ This project is currently under active development (Work In Progress). We are co
   <tr>
     <td align="center">
       <a href="https://github.com/cristianoaredes">
-        <img src="https://avatars.githubusercontent.com/u/cristianoaredes" width="100px;" alt="Cristiano Aredes's Photo"/><br>
+        <img src="https://avatars.githubusercontent.com/u/4899347?s=96&v=4" width="100px;" style="border-radius: 50%; border: 2px solid #0175C2;" alt="Cristiano Aredes's Photo"/><br>
         <sub>
           <b>Cristiano Aredes</b>
         </sub>

@@ -98,6 +98,87 @@ flutter_arqt/
 - **Cartões**: Gerenciamento de cartões
 - **Conta**: Detalhes da conta e extrato
 
+## Soluções Arquiteturais
+
+### Inicialização de Micro Apps Sob Demanda
+
+Um dos destaques deste projeto é o sistema de inicialização de micro apps sob demanda, implementado através de um middleware de rotas. Este sistema:
+
+1. Detecta automaticamente qual micro app é necessário para uma determinada rota
+2. Verifica se o micro app já está inicializado e em um estado válido
+3. Inicializa o micro app se necessário, ou reinicializa em caso de estado inválido
+4. Gerencia corretamente os recursos para evitar memory leaks
+
+### Gerenciamento Robusto de Estado com BLoC/Cubit
+
+Para resolver problemas comuns como "Cannot emit new states after calling close", implementamos um sistema robusto de gerenciamento de ciclo de vida para os Blocs e Cubits:
+
+1. Verificação de estado dos Blocs/Cubits antes de usá-los
+2. Recriação automática quando um Bloc/Cubit foi fechado
+3. Tratamento adequado de exceções durante o fechamento
+4. Prevenção de memory leaks
+
+### Diagrama da Arquitetura
+
+```mermaid
+graph TD
+    SuperApp[Super App] --> |Inicializa| MicroApps[Micro Apps]
+    SuperApp --> |Usa| Core[Core Packages]
+
+    Router[GoRouter] --> Middleware[Route Middleware]
+    Middleware --> |Inicializa| MicroApps
+
+    MicroApps --> Auth[Auth]
+    MicroApps --> Dashboard[Dashboard]
+    MicroApps --> Account[Account]
+    MicroApps --> Cards[Cards]
+    MicroApps --> Payments[Payments]
+    MicroApps --> Pix[Pix]
+    MicroApps --> Splash[Splash]
+
+    subgraph "Arquitetura de um Micro App"
+        UI[Presentation Layer] --> |Usa| Bloc[BLoC/Cubit]
+        Bloc --> |Usa| Domain[Domain Layer]
+        Repositories[Repository Layer] --> |Implementa| Domain
+        DataSources[Data Sources] --> |Alimenta| Repositories
+    end
+
+    Auth --> |Usa| Core
+    Dashboard --> |Usa| Core
+    Account --> |Usa| Core
+    Cards --> |Usa| Core
+    Payments --> |Usa| Core
+    Pix --> |Usa| Core
+
+    Core --> CoreInterfaces[Core Interfaces]
+    Core --> CoreAnalytics[Core Analytics]
+    Core --> CoreNetwork[Core Network]
+    Core --> CoreStorage[Core Storage]
+    Core --> CoreLogging[Core Logging]
+```
+
+## Injeção de Dependências
+
+A injeção de dependências é feita usando o pacote `get_it`. O Super App registra os serviços core e os micro apps, que por sua vez registram suas próprias dependências internas.
+
+O sistema de DI é organizado da seguinte forma:
+1. Registro de serviços core (network, storage, analytics, etc.)
+2. Registro de micro apps como singletons lazy
+3. Cada micro app registra suas próprias dependências quando inicializado
+4. Sistema de cleanup para liberar recursos quando um micro app é descarregado
+
+## Navegação entre Micro Apps
+
+A navegação é implementada usando o pacote `go_router`. Cada micro app define suas próprias rotas, e o Super App as orquestra através do `AppRouter`.
+
+Características principais:
+1. Rotas aninhadas para micro apps
+2. Middleware de inicialização automática
+3. Sistema de recuperação de falhas
+4. Gerenciamento de estado da navegação
+5. Suporte a deep links
+6. Transições personalizadas entre rotas
+
 ## Credenciais de Teste
 
 Para testar a aplicação, você pode usar:
@@ -208,7 +289,7 @@ Este projeto está atualmente em desenvolvimento ativo (Work In Progress). Estam
   <tr>
     <td align="center">
       <a href="https://github.com/cristianoaredes">
-        <img src="https://avatars.githubusercontent.com/u/cristianoaredes" width="100px;" alt="Foto de Cristiano Aredes"/><br>
+        <img src="https://avatars.githubusercontent.com/u/4899347?s=96&v=4" width="100px;" style="border-radius: 50%; border: 2px solid #0175C2;" alt="Foto de Cristiano Aredes"/><br>
         <sub>
           <b>Cristiano Aredes</b>
         </sub>
