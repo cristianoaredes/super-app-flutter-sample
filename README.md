@@ -289,7 +289,7 @@ Este projeto está atualmente em desenvolvimento ativo (Work In Progress). Estam
   <tr>
     <td align="center">
       <a href="https://github.com/cristianoaredes">
-        <img src="https://avatars.githubusercontent.com/u/cristianoaredes" width="100px;" alt="Foto de Cristiano Aredes"/><br>
+        <img src="https://avatars.githubusercontent.com/u/4899347?s=96&v=4" width="100px;" alt="Foto de Cristiano Aredes"/><br>
         <sub>
           <b>Cristiano Aredes</b>
         </sub>
