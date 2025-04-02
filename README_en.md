@@ -289,7 +289,7 @@ This project is currently under active development (Work In Progress). We are co
   <tr>
     <td align="center">
       <a href="https://github.com/cristianoaredes">
-        <img src="https://avatars.githubusercontent.com/u/4899347?s=96&v=4" width="100px;" alt="Cristiano Aredes's Photo"/><br>
+        <img src="https://avatars.githubusercontent.com/u/4899347?s=96&v=4" width="100px;" style="border-radius: 50%; border: 2px solid #0175C2;" alt="Cristiano Aredes's Photo"/><br>
         <sub>
           <b>Cristiano Aredes</b>
         </sub>
