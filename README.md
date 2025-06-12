@@ -157,6 +157,16 @@ graph TD
     Core --> CoreLogging[Core Logging]
 ```
 
+#### Gerando o diagrama com D2
+
+O arquivo `docs/architecture.d2` descreve o diagrama acima. Para gerar as versões
+em SVG ou GIF instale o [D2 CLI](https://d2lang.com/) e execute:
+
+```bash
+d2 docs/architecture.d2 docs/architecture.svg
+d2 --format=gif docs/architecture.d2 docs/architecture.gif
+```
+
 ## Injeção de Dependências
 
 A injeção de dependências é feita usando o pacote `get_it`. O Super App registra os serviços core e os micro apps, que por sua vez registram suas próprias dependências internas.
