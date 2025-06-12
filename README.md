@@ -159,12 +159,12 @@ graph TD
 
 #### Gerando o diagrama com D2
 
-O diagrama acima é descrito em `docs/architecture.d2`. Para gerar as versões GIF e
-SVG, instale o [D2 CLI](https://d2lang.com/) e execute:
+O diagrama acima é descrito em `docs/diagrams/architecture.d2`. Para gerar as versões SVG e GIF,
+instale o [D2 CLI](https://d2lang.com/) e execute:
 
 ```bash
-d2 docs/architecture.d2 docs/architecture.svg
-d2 --format=gif docs/architecture.d2 docs/architecture.gif
+d2 docs/diagrams/architecture.d2 docs/diagrams/architecture.svg
+d2 --animate-interval 1000 docs/diagrams/architecture.d2 docs/diagrams/architecture.gif
 ```
 
 ## Injeção de Dependências
