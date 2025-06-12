@@ -159,8 +159,8 @@ graph TD
 
 #### Gerando o diagrama com D2
 
-O arquivo `docs/architecture.d2` descreve o diagrama acima. Para gerar as versões
-em SVG ou GIF instale o [D2 CLI](https://d2lang.com/) e execute:
+O diagrama acima é descrito em `docs/architecture.d2`. Para gerar as versões GIF e
+SVG, instale o [D2 CLI](https://d2lang.com/) e execute:
 
 ```bash
 d2 docs/architecture.d2 docs/architecture.svg
