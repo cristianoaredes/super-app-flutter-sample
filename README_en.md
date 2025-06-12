@@ -341,4 +341,4 @@ If you use this project as a reference in articles or studies, please cite:
 ---
 <div align="center">
   Made with ❤️ by <a href="https://github.com/cristianoaredes">Cristiano Aredes</a>
-</div> 
+</div>
