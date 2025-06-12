@@ -159,12 +159,12 @@ graph TD
 
 #### Generating the diagram with D2
 
-The diagram above is described in `docs/architecture.d2`. To create SVG and GIF
+The diagram above is described in `docs/diagrams/architecture.d2`. To create SVG and GIF
 versions, install the [D2 CLI](https://d2lang.com/) and run:
 
 ```bash
-d2 docs/architecture.d2 docs/architecture.svg
-d2 --format=gif docs/architecture.d2 docs/architecture.gif
+d2 docs/diagrams/architecture.d2 docs/diagrams/architecture.svg
+d2 --animate-interval 1000 docs/diagrams/architecture.d2 docs/diagrams/architecture.gif
 ```
 
 ## Dependency Injection
