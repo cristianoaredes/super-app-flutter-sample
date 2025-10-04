@@ -17,6 +17,8 @@ This directory contains comprehensive AS-IS (current state) analysis documentati
 
 ### 📊 Analysis Documents
 
+**Start Here**: 👉 **[Executive Summary](./00-executive-summary.md)** - Quick overview and key findings
+
 1. **[Project Overview](./01-project-overview.md)**
    - Executive summary
    - Project purpose and vision
