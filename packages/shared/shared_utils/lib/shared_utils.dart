@@ -14,3 +14,4 @@ export 'src/extensions/number_extensions.dart';
 export 'src/extensions/list_extensions.dart';
 export 'src/helpers/debouncer.dart';
 export 'src/helpers/throttler.dart';
+export 'src/route_params_validator.dart';

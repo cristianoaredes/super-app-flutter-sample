@@ -1,10 +1,14 @@
 library core_interfaces;
 
 export 'src/micro_app.dart';
+export 'src/base_micro_app.dart';
 export 'src/core_library.dart';
 export 'src/shared_library.dart';
 export 'src/flutter_plugin.dart';
 export 'src/bloc_registry.dart';
+
+// Exceptions
+export 'src/exceptions/app_exceptions.dart';
 
 
 export 'src/services/navigation_service.dart';
