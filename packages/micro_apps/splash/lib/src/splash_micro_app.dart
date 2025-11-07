@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'di/navigation_service_locator.dart';
 import 'presentation/pages/splash_page.dart';
 
-
-class SplashMicroApp implements MicroApp {
-  bool _initialized = false;
+/// Micro app de Splash
+///
+/// Gerencia funcionalidades de:
+/// - Tela inicial de carregamento
+/// - Inicialização de serviços básicos
+/// - Navegação inicial do app
+class SplashMicroApp extends BaseMicroApp {
+  SplashMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'splash';
@@ -15,17 +20,11 @@ class SplashMicroApp implements MicroApp {
   String get name => 'Splash';
 
   @override
-  bool get isInitialized => _initialized;
-
-  @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
-
-    
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Configura o serviço de navegação para uso global
     NavigationServiceLocator.setNavigationService(
-        dependencies.navigationService);
-
-    _initialized = true;
+      dependencies.navigationService,
+    );
   }
 
   @override
@@ -40,11 +39,17 @@ class SplashMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    
+    // SplashMicroApp não possui BLoCs para registrar
   }
 
   @override
-  Future<void> dispose() async {
-    
+  Future<void> onDispose() async {
+    // SplashMicroApp não possui recursos para limpar
+  }
+
+  @override
+  Future<bool> checkHealth() async {
+    // SplashMicroApp é sempre saudável (não possui estado para validar)
+    return true;
   }
 }

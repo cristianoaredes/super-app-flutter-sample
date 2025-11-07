@@ -203,37 +203,19 @@ Future<void> _initializeMicroApps(MicroAppDependencies dependencies) async {
 
         if (microApp.isInitialized) {
           try {
-            if (microAppName == 'payments') {
-              try {
-                (microApp as dynamic).paymentsCubit;
-                loggingService.info(
-                  'Micro app $microAppName já estava inicializado e é válido',
-                );
-                return;
-              } catch (e) {
-                loggingService.warning(
-                  'PaymentsCubit não está em um estado válido, reinicializando: $e',
-                );
-                await microApp.dispose();
-              }
-            } else if (microAppName == 'pix') {
-              try {
-                (microApp as dynamic).pixBloc;
-                loggingService.info(
-                  'Micro app $microAppName já estava inicializado e é válido',
-                );
-                return;
-              } catch (e) {
-                loggingService.warning(
-                  'PixBloc não está em um estado válido, reinicializando: $e',
-                );
-                await microApp.dispose();
-              }
-            } else {
+            // Verifica se o micro app está em estado saudável usando o método isHealthy()
+            final isHealthy = await microApp.isHealthy();
+
+            if (isHealthy) {
               loggingService.info(
-                'Micro app $microAppName já estava inicializado',
+                'Micro app $microAppName já estava inicializado e é válido',
               );
               return;
+            } else {
+              loggingService.warning(
+                'Micro app $microAppName não está em um estado válido, reinicializando',
+              );
+              await microApp.dispose();
             }
           } catch (e) {
             loggingService.warning(

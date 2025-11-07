@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Network Security Configuration for Premium Bank Super App
+
+  This file configures security settings for network connections on Android.
+  It enforces HTTPS, certificate pinning, and other security measures.
+
+  Documentation: https://developer.android.com/training/articles/security-config
+-->
+<network-security-config>
+    <!--
+      Base configuration applied to all connections
+      - cleartextTrafficPermitted: false = HTTPS only
+      - Trust system certificates and our custom certificates
+    -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system certificates -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!--
+      Domain-specific configuration for API endpoints
+      Includes certificate pinning for enhanced security
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <!-- Main API domain -->
+        <domain includeSubdomains="true">api.premiumbank.com</domain>
+
+        <!--
+          Certificate Pinning Configuration
+          expiration: Date when pins expire (update before this date)
+
+          To generate SHA-256 pin:
+          openssl x509 -in certificate.crt -pubkey -noout | \
+          openssl pkey -pubin -outform der | \
+          openssl dgst -sha256 -binary | \
+          openssl enc -base64
+        -->
+        <pin-set expiration="2025-12-31">
+            <!-- Primary certificate pin -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <!-- Backup certificate pin (for certificate rotation) -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+        </pin-set>
+
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!--
+      Authentication domain configuration
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">auth.premiumbank.com</domain>
+
+        <pin-set expiration="2025-12-31">
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin>
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin>
+        </pin-set>
+
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!--
+      CDN domain configuration
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">cdn.premiumbank.com</domain>
+
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!--
+      Debug overrides
+      Only active in debug builds
+      Allows testing with self-signed certificates in development
+      IMPORTANT: This section is automatically removed in release builds
+    -->
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Trust user-installed certificates in debug only -->
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

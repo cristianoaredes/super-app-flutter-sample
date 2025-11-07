@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:shared_utils/shared_utils.dart';
 
 import 'data/repositories/payment_repository_impl.dart';
 import 'data/datasources/payment_remote_data_source.dart';
@@ -12,14 +13,20 @@ import 'data/datasources/payment_mock_datasource.dart';
 import 'presentation/cubits/payments_cubit.dart';
 import 'presentation/pages/payment_detail_page.dart';
 import 'presentation/pages/payments_page.dart';
+import 'presentation/widgets/error_page.dart';
 
-class PaymentsMicroApp implements MicroApp {
+/// Micro app de Pagamentos
+///
+/// Gerencia funcionalidades de:
+/// - Listagem de pagamentos
+/// - Detalhes de pagamento
+/// - Criação de novos pagamentos
+/// - Histórico de pagamentos
+class PaymentsMicroApp extends BaseMicroApp {
   PaymentsCubit? _paymentsCubit;
-  bool _initialized = false;
-
-  // Armazene as dependências para usar posteriormente quando criar novos Cubits
-  MicroAppDependencies? _dependencies;
   PaymentRepositoryImpl? _paymentRepository;
+
+  PaymentsMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'payments';
@@ -27,42 +34,25 @@ class PaymentsMicroApp implements MicroApp {
   @override
   String get name => 'Payments';
 
-  @override
-  bool get isInitialized => _initialized;
-
+  /// Retorna a instância do PaymentsCubit
+  ///
+  /// Throws [InvalidStateException] se o micro app não foi inicializado.
   PaymentsCubit get paymentsCubit {
-    if (!_initialized) {
-      throw StateError(
-          'PaymentsMicroApp não foi inicializado. Chame initialize() primeiro.');
-    }
+    ensureInitialized();
 
-    // Se o cubit foi fechado ou é nulo, crie um novo
     if (_paymentsCubit == null) {
-      if (_paymentRepository != null) {
-        _createCubit();
-      } else {
-        throw StateError(
-            'PaymentsCubit não pode ser criado porque o repositório não está disponível.');
-      }
+      throw InvalidStateException(
+        message: 'PaymentsCubit não foi inicializado corretamente.',
+      );
     }
 
     return _paymentsCubit!;
   }
 
-  // Cria um novo PaymentsCubit usando o repositório configurado
-  void _createCubit() {
-    if (_paymentRepository != null && _dependencies != null) {
-      _paymentsCubit = PaymentsCubit(
-        repository: _paymentRepository!,
-        analyticsService: _dependencies!.analyticsService,
-      );
-    }
-  }
-
   @override
   Map<String, GoRouteBuilder> get routes => {
         '/payments': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
 
           return flutter_bloc.BlocProvider<PaymentsCubit>(
             create: (context) => paymentsCubit,
@@ -70,55 +60,54 @@ class PaymentsMicroApp implements MicroApp {
           );
         },
         '/payments/:id': (context, state) {
-          _ensureInitialized();
-          final id = state.params['id']!;
+          ensureInitialized();
 
-          return flutter_bloc.BlocProvider<PaymentsCubit>(
-            create: (context) => paymentsCubit,
-            child: PaymentDetailPage(id: id),
-          );
+          try {
+            // Valida parâmetro de rota
+            final id = RouteParamsValidator.getRequiredParam(
+              state.params,
+              'id',
+            );
+
+            return flutter_bloc.BlocProvider<PaymentsCubit>(
+              create: (context) => paymentsCubit,
+              child: PaymentDetailPage(id: id),
+            );
+          } on RouteParamException catch (e) {
+            return ErrorPage(message: e.message);
+          }
         },
       };
 
-  void _ensureInitialized() {
-    if (!_initialized) {
-      throw StateError(
-          'PaymentsMicroApp has not been initialized. Call initialize() first.');
-    }
-
-    if (_paymentsCubit == null) {
-      _createCubit();
-      if (_paymentsCubit == null) {
-        throw StateError(
-            'PaymentsCubit não foi inicializado corretamente. Problema na inicialização do micro app.');
-      }
-    }
-  }
-
   @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
-
-    // Armazenamos as dependências para uso posterior
-    _dependencies = dependencies;
-
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Configurar HydratedBloc para persistência (apenas mobile/desktop)
     if (!kIsWeb) {
       try {
         final tempDir = Directory.systemTemp.createTempSync('hydrated_bloc');
         HydratedBloc.storage = await HydratedStorage.build(
           storageDirectory: tempDir,
         );
-      } catch (e) {}
+      } catch (e) {
+        dependencies.loggingService?.warning(
+          'Falha ao configurar HydratedBloc storage: $e',
+          tag: 'PaymentsMicroApp',
+        );
+      }
     }
 
-    final useMockData =
-        dependencies.config.getValue<bool>('mock_data') ?? false;
+    // Determinar se deve usar mock data
+    final useMockData = dependencies.config.getValue<bool>('mock_data') ?? false;
 
+    // Criar data source apropriado
     PaymentRemoteDataSource remoteDataSource;
 
     if (useMockData) {
       if (kDebugMode) {
-        print('🌐 Using PaymentMockDataSource for development environment');
+        dependencies.loggingService?.info(
+          'Using PaymentMockDataSource for development environment',
+          tag: 'PaymentsMicroApp',
+        );
       }
       remoteDataSource = PaymentMockDataSource();
     } else {
@@ -129,20 +118,61 @@ class PaymentsMicroApp implements MicroApp {
       );
     }
 
+    // Criar repositório
     _paymentRepository = PaymentRepositoryImpl(
       remoteDataSource: remoteDataSource,
       authService: dependencies.authService,
     );
 
-    // Cria o cubit inicial
-    _createCubit();
+    // Criar cubit
+    _paymentsCubit = PaymentsCubit(
+      repository: _paymentRepository!,
+      analyticsService: dependencies.analyticsService,
+    );
+  }
 
-    _initialized = true;
+  @override
+  Future<void> onDispose() async {
+    if (_paymentsCubit != null) {
+      try {
+        await _paymentsCubit!.close();
+      } catch (e) {
+        dependencies.loggingService?.warning(
+          'Erro ao fechar PaymentsCubit: $e',
+          tag: 'PaymentsMicroApp',
+        );
+      } finally {
+        _paymentsCubit = null;
+      }
+    }
+
+    // Limpar repositório
+    _paymentRepository = null;
+  }
+
+  @override
+  Future<bool> checkHealth() async {
+    if (_paymentsCubit == null || _paymentRepository == null) {
+      return false;
+    }
+
+    try {
+      // Verifica se o Cubit está em estado válido
+      final state = _paymentsCubit!.state;
+      return state != null;
+    } catch (e) {
+      dependencies.loggingService?.error(
+        'Health check falhou para PaymentsCubit',
+        error: e,
+        tag: 'PaymentsMicroApp',
+      );
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _ensureInitialized();
+    ensureInitialized();
     return flutter_bloc.BlocProvider<PaymentsCubit>(
       create: (context) => paymentsCubit,
       child: const PaymentsPage(),
@@ -151,26 +181,7 @@ class PaymentsMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    _ensureInitialized();
+    ensureInitialized();
     registry.register<PaymentsCubit>(paymentsCubit);
-  }
-
-  @override
-  Future<void> dispose() async {
-    if (_initialized && _paymentsCubit != null) {
-      try {
-        await _paymentsCubit!.close();
-      } catch (e) {
-        // Ignora exceções durante o fechamento
-        debugPrint('Erro ao fechar PaymentsCubit: $e');
-      } finally {
-        _paymentsCubit = null;
-        _initialized = false;
-      }
-    }
-
-    // Mas mantenha o repositório configurado para uso futuro
-    // _paymentRepository = null;
-    // _dependencies = null;
   }
 }

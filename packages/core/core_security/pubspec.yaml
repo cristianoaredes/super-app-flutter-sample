@@ -1,0 +1,42 @@
+name: core_security
+description: Security services and utilities for Premium Bank Super App
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Secure storage
+  flutter_secure_storage: ^9.0.0
+
+  # Cryptography
+  crypto: ^3.0.3
+  encrypt: ^5.0.3
+
+  # JWT
+  jwt_decoder: ^2.0.1
+
+  # Biometrics
+  local_auth: ^2.1.8
+
+  # Device info
+  device_info_plus: ^9.1.1
+
+  # Core packages
+  core_interfaces:
+    path: ../core_interfaces
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  mockito: ^5.4.2
+  build_runner: ^2.4.6
+
+flutter:
+  uses-material-design: true

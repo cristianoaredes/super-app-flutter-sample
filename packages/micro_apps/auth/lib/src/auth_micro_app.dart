@@ -9,13 +9,22 @@ import 'presentation/pages/login_page.dart';
 import 'presentation/pages/register_page.dart';
 import 'presentation/pages/reset_password_page.dart';
 
-
-class AuthMicroApp implements MicroApp {
-  final GetIt _getIt;
+/// Micro app de autenticação
+///
+/// Gerencia funcionalidades de:
+/// - Login com email/senha
+/// - Registro de novos usuários
+/// - Recuperação de senha
+/// - Login social (Google, Apple)
+///
+/// ## Credenciais de Teste
+///
+/// - Email: user@example.com
+/// - Senha: password
+class AuthMicroApp extends BaseMicroApp {
   AuthBloc? _authBloc;
-  bool _initialized = false;
 
-  AuthMicroApp({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+  AuthMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'auth';
@@ -23,36 +32,32 @@ class AuthMicroApp implements MicroApp {
   @override
   String get name => 'Auth';
 
-  @override
-  bool get isInitialized => _initialized;
-
-  
+  /// Retorna a instância do AuthBloc
+  ///
+  /// Throws [InvalidStateException] se o micro app não foi inicializado.
   AuthBloc get authBloc {
-    if (!_initialized) {
-      throw StateError(
-          'AuthMicroApp não foi inicializado. Chame initialize() primeiro.');
-    }
+    ensureInitialized();
     return _authBloc!;
   }
 
   @override
   Map<String, GoRouteBuilder> get routes => {
         '/login': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AuthBloc>.value(
             value: authBloc,
             child: const LoginPage(),
           );
         },
         '/register': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AuthBloc>.value(
             value: authBloc,
             child: const RegisterPage(),
           );
         },
         '/reset-password': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AuthBloc>.value(
             value: authBloc,
             child: const ResetPasswordPage(),
@@ -60,34 +65,46 @@ class AuthMicroApp implements MicroApp {
         },
       };
 
-  
-  void _ensureInitialized() {
-    if (!_initialized) {
-      
-      AuthInjector.register(_getIt);
+  @override
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Registrar dependências do módulo de autenticação
+    AuthInjector.register(getIt);
 
-      
-      _authBloc = _getIt<AuthBloc>();
-      _initialized = true;
+    // Criar instância do AuthBloc
+    _authBloc = getIt<AuthBloc>();
+  }
+
+  @override
+  Future<void> onDispose() async {
+    if (_authBloc != null) {
+      await _authBloc!.close();
+      _authBloc = null;
     }
   }
 
   @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
+  Future<bool> checkHealth() async {
+    if (_authBloc == null) {
+      return false;
+    }
 
-    
-    AuthInjector.register(_getIt);
-
-    
-    _authBloc = _getIt<AuthBloc>();
-
-    _initialized = true;
+    try {
+      // Verifica se o BLoC está em estado válido
+      final state = _authBloc!.state;
+      return state != null;
+    } catch (e) {
+      dependencies.loggingService?.error(
+        'Health check falhou para AuthBloc',
+        error: e,
+        tag: 'AuthMicroApp',
+      );
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _ensureInitialized();
+    ensureInitialized();
     return flutter_bloc.BlocProvider.value(
       value: authBloc,
       child: const LoginPage(),
@@ -96,14 +113,7 @@ class AuthMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    _ensureInitialized();
+    ensureInitialized();
     registry.register(authBloc);
-  }
-
-  @override
-  Future<void> dispose() async {
-    if (_initialized && _authBloc != null) {
-      await _authBloc!.close();
-    }
   }
 }
