@@ -1,7 +1,6 @@
 import 'package:core_interfaces/core_interfaces.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 import 'di/account_injector.dart';
 import 'presentation/bloc/account_bloc.dart';
@@ -10,13 +9,17 @@ import 'presentation/pages/account_details_page.dart';
 import 'presentation/pages/account_statement_page.dart';
 import 'presentation/pages/transfer_page.dart';
 
-
-class AccountMicroApp implements MicroApp {
-  final GetIt _getIt;
+/// Micro app de Conta
+///
+/// Gerencia funcionalidades de:
+/// - Visualização de saldo e informações da conta
+/// - Detalhes da conta (agência, conta, CPF)
+/// - Extrato da conta
+/// - Transferências bancárias
+class AccountMicroApp extends BaseMicroApp {
   AccountBloc? _accountBloc;
-  bool _initialized = false;
 
-  AccountMicroApp({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+  AccountMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'account';
@@ -24,43 +27,46 @@ class AccountMicroApp implements MicroApp {
   @override
   String get name => 'Conta';
 
-  @override
-  bool get isInitialized => _initialized;
-
-  
+  /// Retorna a instância do AccountBloc
+  ///
+  /// Throws [InvalidStateException] se o micro app não foi inicializado.
   AccountBloc get accountBloc {
-    if (!_initialized) {
-      throw StateError(
-          'AccountMicroApp não foi inicializado. Chame initialize() primeiro.');
+    ensureInitialized();
+
+    if (_accountBloc == null) {
+      throw InvalidStateException(
+        message: 'AccountBloc não foi inicializado corretamente.',
+      );
     }
+
     return _accountBloc!;
   }
 
   @override
   Map<String, GoRouteBuilder> get routes => {
         '/account': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AccountBloc>.value(
             value: accountBloc,
             child: const AccountPage(),
           );
         },
         '/account/details': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AccountBloc>.value(
             value: accountBloc,
             child: const AccountDetailsPage(),
           );
         },
         '/account/statement': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AccountBloc>.value(
             value: accountBloc,
             child: const AccountStatementPage(),
           );
         },
         '/account/transfer': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<AccountBloc>.value(
             value: accountBloc,
             child: const TransferPage(),
@@ -68,30 +74,54 @@ class AccountMicroApp implements MicroApp {
         },
       };
 
-  
-  void _ensureInitialized() {
-    if (!_initialized) {
-      
-      AccountInjector.register(_getIt);
-      _accountBloc = _getIt<AccountBloc>();
-      _initialized = true;
+  @override
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Registrar dependências
+    AccountInjector.register(getIt);
+
+    // Inicializa o AccountBloc
+    _accountBloc = getIt<AccountBloc>();
+  }
+
+  @override
+  Future<void> onDispose() async {
+    if (_accountBloc != null) {
+      try {
+        await _accountBloc!.close();
+      } catch (e) {
+        dependencies.loggingService?.warning(
+          'Erro ao fechar AccountBloc: $e',
+          tag: 'AccountMicroApp',
+        );
+      } finally {
+        _accountBloc = null;
+      }
     }
   }
 
   @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
+  Future<bool> checkHealth() async {
+    if (_accountBloc == null) {
+      return false;
+    }
 
-    
-    AccountInjector.register(_getIt);
-    _accountBloc = _getIt<AccountBloc>();
-
-    _initialized = true;
+    try {
+      // Verifica se o Bloc está em estado válido
+      final state = _accountBloc!.state;
+      return state != null;
+    } catch (e) {
+      dependencies.loggingService?.error(
+        'Health check falhou para AccountBloc',
+        error: e,
+        tag: 'AccountMicroApp',
+      );
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _ensureInitialized();
+    ensureInitialized();
     return flutter_bloc.BlocProvider.value(
       value: accountBloc,
       child: const AccountPage(),
@@ -100,14 +130,7 @@ class AccountMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    _ensureInitialized();
-    registry.register(accountBloc);
-  }
-
-  @override
-  Future<void> dispose() async {
-    if (_initialized && _accountBloc != null) {
-      await _accountBloc!.close();
-    }
+    ensureInitialized();
+    registry.register<AccountBloc>(accountBloc);
   }
 }

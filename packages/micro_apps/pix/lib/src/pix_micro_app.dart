@@ -1,7 +1,7 @@
 import 'package:core_interfaces/core_interfaces.dart' hide BlocProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
+import 'package:shared_utils/shared_utils.dart';
 
 import 'di/pix_injector.dart';
 import 'presentation/bloc/pix_bloc.dart';
@@ -12,14 +12,19 @@ import 'presentation/pages/send_pix_page.dart';
 import 'presentation/pages/receive_pix_page.dart';
 import 'presentation/pages/pix_qr_code_scanner_page.dart';
 import 'presentation/pages/pix_transaction_details_page.dart';
+import 'presentation/widgets/error_page.dart';
 
-class PixMicroApp implements MicroApp {
-  final GetIt _getIt;
-  bool _initialized = false;
+/// Micro app de Pix
+///
+/// Gerencia funcionalidades de:
+/// - Transferências via Pix
+/// - Gerenciamento de chaves Pix
+/// - Recebimento via QR Code
+/// - Histórico de transações Pix
+class PixMicroApp extends BaseMicroApp {
   PixBloc? _pixBloc;
-  MicroAppDependencies? _dependencies;
 
-  PixMicroApp({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+  PixMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'pix';
@@ -27,41 +32,16 @@ class PixMicroApp implements MicroApp {
   @override
   String get name => 'Pix';
 
-  @override
-  bool get isInitialized => _initialized;
-
+  /// Retorna a instância do PixBloc
+  ///
+  /// Throws [InvalidStateException] se o micro app não foi inicializado.
   PixBloc get pixBloc {
-    _ensureInitialized();
+    ensureInitialized();
 
-    // Sempre cria uma nova instância do PixBloc para evitar problemas de ciclo de vida
-    try {
-      // Fecha o bloc anterior se existir
-      if (_pixBloc != null) {
-        try {
-          _pixBloc!.close();
-        } catch (e) {
-          // Ignora erros ao fechar
-          debugPrint('Erro ao fechar PixBloc anterior: $e');
-        }
-      }
-
-      // Cria uma nova instância
-      _pixBloc = _getIt<PixBloc>();
-    } catch (e) {
-      debugPrint('Erro ao obter PixBloc do GetIt: $e');
-      // Se não conseguiu obter do GetIt, tente reinicializar
-      if (_dependencies != null) {
-        PixInjector.register(_getIt);
-        try {
-          _pixBloc = _getIt<PixBloc>();
-        } catch (e) {
-          debugPrint('Erro ao recriar PixBloc: $e');
-          throw StateError('Não foi possível recuperar ou recriar o PixBloc');
-        }
-      } else {
-        throw StateError(
-            'Não é possível recriar o PixBloc sem as dependências');
-      }
+    if (_pixBloc == null) {
+      throw InvalidStateException(
+        message: 'PixBloc não foi inicializado corretamente.',
+      );
     }
 
     return _pixBloc!;
@@ -70,87 +50,127 @@ class PixMicroApp implements MicroApp {
   @override
   Map<String, GoRouteBuilder> get routes => {
         '/pix': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const PixHomePage(),
           );
         },
         '/pix/keys': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const PixKeysPage(),
           );
         },
         '/pix/keys/register': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const RegisterPixKeyPage(),
           );
         },
         '/pix/send': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const SendPixPage(),
           );
         },
         '/pix/receive': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const ReceivePixPage(),
           );
         },
         '/pix/scan': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
+            create: (context) => pixBloc,
             child: const PixQrCodeScannerPage(),
           );
         },
         '/pix/transaction/:id': (context, state) {
-          _ensureInitialized();
-          final id = state.params['id'] ?? '';
-          return BlocProvider<PixBloc>(
-            create: (context) => _getIt<PixBloc>(),
-            child: PixTransactionDetailsPage(transactionId: id),
-          );
+          ensureInitialized();
+
+          try {
+            // Valida parâmetro de rota
+            final id = RouteParamsValidator.getRequiredParam(
+              state.params,
+              'id',
+            );
+
+            return BlocProvider<PixBloc>(
+              create: (context) => pixBloc,
+              child: PixTransactionDetailsPage(transactionId: id),
+            );
+          } on RouteParamException catch (e) {
+            return ErrorPage(message: e.message);
+          }
         },
       };
 
-  void _ensureInitialized() {
-    if (!_initialized) {
-      throw StateError(
-          'PixMicroApp não foi inicializado. Chame initialize() primeiro.');
+  @override
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Registrar dependências e criação do bloc
+    PixInjector.register(getIt);
+
+    // Inicializa o PixBloc após o registro das dependências
+    _pixBloc = getIt<PixBloc>();
+  }
+
+  @override
+  Future<void> onDispose() async {
+    if (_pixBloc != null) {
+      try {
+        await _pixBloc!.close();
+      } catch (e) {
+        dependencies.loggingService?.warning(
+          'Erro ao fechar PixBloc: $e',
+          tag: 'PixMicroApp',
+        );
+      } finally {
+        _pixBloc = null;
+      }
     }
 
-    if (_pixBloc == null) {
-      throw StateError(
-          'PixBloc não foi inicializado corretamente. Problema na inicialização do micro app.');
+    // Limpa o registro do GetIt para garantir que novas instâncias sejam criadas
+    try {
+      if (getIt.isRegistered<PixBloc>()) {
+        getIt.unregister<PixBloc>();
+      }
+    } catch (e) {
+      dependencies.loggingService?.warning(
+        'Erro ao limpar registro do PixBloc: $e',
+        tag: 'PixMicroApp',
+      );
     }
   }
 
   @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
+  Future<bool> checkHealth() async {
+    if (_pixBloc == null) {
+      return false;
+    }
 
-    _dependencies = dependencies;
-
-    // Registrar dependências e criação do bloc
-    PixInjector.register(_getIt);
-
-    // Inicializa o PixBloc após o registro das dependências
-    _pixBloc = _getIt<PixBloc>();
-
-    _initialized = true;
+    try {
+      // Verifica se o Bloc está em estado válido
+      final state = _pixBloc!.state;
+      return state != null;
+    } catch (e) {
+      dependencies.loggingService?.error(
+        'Health check falhou para PixBloc',
+        error: e,
+        tag: 'PixMicroApp',
+      );
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _ensureInitialized();
+    ensureInitialized();
     return BlocProvider<PixBloc>(
       create: (context) => pixBloc,
       child: const PixHomePage(),
@@ -159,34 +179,7 @@ class PixMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    _ensureInitialized();
-    registry.register(pixBloc);
-  }
-
-  @override
-  Future<void> dispose() async {
-    if (_pixBloc != null) {
-      try {
-        await _pixBloc!.close();
-      } catch (e) {
-        // Ignora exceções durante o fechamento
-        debugPrint('Erro ao fechar PixBloc: $e');
-      } finally {
-        _pixBloc = null;
-      }
-    }
-
-    // Limpa o registro do GetIt para garantir que novas instâncias sejam criadas
-    try {
-      if (_getIt.isRegistered<PixBloc>()) {
-        _getIt.unregister<PixBloc>();
-      }
-    } catch (e) {
-      debugPrint('Erro ao limpar registro do PixBloc: $e');
-    }
-
-    // Definimos explicitamente como não inicializado após o dispose
-    // para garantir que uma nova instância seja criada se necessário
-    _initialized = false;
+    ensureInitialized();
+    registry.register<PixBloc>(pixBloc);
   }
 }

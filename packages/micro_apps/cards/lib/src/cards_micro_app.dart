@@ -1,21 +1,26 @@
 import 'package:core_interfaces/core_interfaces.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:shared_utils/shared_utils.dart';
 
 import 'di/cards_injector.dart';
 import 'presentation/bloc/cards_bloc.dart';
 import 'presentation/pages/cards_page.dart';
 import 'presentation/pages/card_details_page.dart';
 import 'presentation/pages/card_statement_page.dart';
+import 'presentation/widgets/error_page.dart';
 
-
-class CardsMicroApp implements MicroApp {
-  final GetIt _getIt;
+/// Micro app de Cartões
+///
+/// Gerencia funcionalidades de:
+/// - Listagem de cartões (débito e crédito)
+/// - Detalhes do cartão (limite, fatura, etc)
+/// - Extrato do cartão
+/// - Gerenciamento de cartões virtuais
+class CardsMicroApp extends BaseMicroApp {
   CardsBloc? _cardsBloc;
-  bool _initialized = false;
 
-  CardsMicroApp({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+  CardsMicroApp({GetIt? getIt}) : super(getIt: getIt);
 
   @override
   String get id => 'cards';
@@ -23,69 +28,116 @@ class CardsMicroApp implements MicroApp {
   @override
   String get name => 'Cartões';
 
-  @override
-  bool get isInitialized => _initialized;
-
-  
+  /// Retorna a instância do CardsBloc
+  ///
+  /// Throws [InvalidStateException] se o micro app não foi inicializado.
   CardsBloc get cardsBloc {
-    if (!_initialized) {
-      throw StateError(
-          'CardsMicroApp não foi inicializado. Chame initialize() primeiro.');
+    ensureInitialized();
+
+    if (_cardsBloc == null) {
+      throw InvalidStateException(
+        message: 'CardsBloc não foi inicializado corretamente.',
+      );
     }
+
     return _cardsBloc!;
   }
 
   @override
   Map<String, GoRouteBuilder> get routes => {
         '/cards': (context, state) {
-          _ensureInitialized();
+          ensureInitialized();
           return flutter_bloc.BlocProvider<CardsBloc>.value(
             value: cardsBloc,
             child: const CardsPage(),
           );
         },
         '/cards/:id': (context, state) {
-          _ensureInitialized();
-          final id = state.params['id'] ?? '';
-          return flutter_bloc.BlocProvider<CardsBloc>.value(
-            value: cardsBloc,
-            child: CardDetailsPage(cardId: id),
-          );
+          ensureInitialized();
+
+          try {
+            // Valida parâmetro de rota
+            final id = RouteParamsValidator.getRequiredParam(
+              state.params,
+              'id',
+            );
+
+            return flutter_bloc.BlocProvider<CardsBloc>.value(
+              value: cardsBloc,
+              child: CardDetailsPage(cardId: id),
+            );
+          } on RouteParamException catch (e) {
+            return ErrorPage(message: e.message);
+          }
         },
         '/cards/:id/statement': (context, state) {
-          _ensureInitialized();
-          final id = state.params['id'] ?? '';
-          return flutter_bloc.BlocProvider<CardsBloc>.value(
-            value: cardsBloc,
-            child: CardStatementPage(cardId: id),
-          );
+          ensureInitialized();
+
+          try {
+            // Valida parâmetro de rota
+            final id = RouteParamsValidator.getRequiredParam(
+              state.params,
+              'id',
+            );
+
+            return flutter_bloc.BlocProvider<CardsBloc>.value(
+              value: cardsBloc,
+              child: CardStatementPage(cardId: id),
+            );
+          } on RouteParamException catch (e) {
+            return ErrorPage(message: e.message);
+          }
         },
       };
 
-  
-  void _ensureInitialized() {
-    if (!_initialized) {
-      
-      CardsInjector.register(_getIt);
-      _cardsBloc = _getIt<CardsBloc>();
-      _initialized = true;
+  @override
+  Future<void> onInitialize(MicroAppDependencies dependencies) async {
+    // Registrar dependências
+    CardsInjector.register(getIt);
+
+    // Inicializa o CardsBloc
+    _cardsBloc = getIt<CardsBloc>();
+  }
+
+  @override
+  Future<void> onDispose() async {
+    if (_cardsBloc != null) {
+      try {
+        await _cardsBloc!.close();
+      } catch (e) {
+        dependencies.loggingService?.warning(
+          'Erro ao fechar CardsBloc: $e',
+          tag: 'CardsMicroApp',
+        );
+      } finally {
+        _cardsBloc = null;
+      }
     }
   }
 
   @override
-  Future<void> initialize(MicroAppDependencies dependencies) async {
-    if (_initialized) return;
+  Future<bool> checkHealth() async {
+    if (_cardsBloc == null) {
+      return false;
+    }
 
-    
-    CardsInjector.register(_getIt);
-    _cardsBloc = _getIt<CardsBloc>();
-
-    _initialized = true;
+    try {
+      // Verifica se o Bloc está em estado válido
+      final state = _cardsBloc!.state;
+      return state != null;
+    } catch (e) {
+      dependencies.loggingService?.error(
+        'Health check falhou para CardsBloc',
+        error: e,
+        tag: 'CardsMicroApp',
+      );
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _ensureInitialized();
+    ensureInitialized();
     return flutter_bloc.BlocProvider.value(
       value: cardsBloc,
       child: const CardsPage(),
@@ -94,14 +146,7 @@ class CardsMicroApp implements MicroApp {
 
   @override
   void registerBlocs(BlocRegistry registry) {
-    _ensureInitialized();
-    registry.register(cardsBloc);
-  }
-
-  @override
-  Future<void> dispose() async {
-    if (_initialized && _cardsBloc != null) {
-      await _cardsBloc!.close();
-    }
+    ensureInitialized();
+    registry.register<CardsBloc>(cardsBloc);
   }
 }
