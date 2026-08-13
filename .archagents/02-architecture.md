@@ -14,10 +14,10 @@ Não é microservices (um binário), não é hexagonal explícito (não há `por
 ```mermaid
 graph TB
     subgraph "Presentation"
-        UI[Pages / Widgets]
-        VM[BLoC / Cubit]
+        UI["Pages e Widgets"]
+        VM["BLoC Cubit"]
     end
-    subgraph "Domain (sem deps de data/infra HTTP)"
+    subgraph Domain["Domain (sem deps de data ou HTTP)"]
         UC[Use Cases]
         ENT[Entities]
         REPO_IF[Repository Interfaces]
@@ -25,9 +25,11 @@ graph TB
     subgraph "Data"
         REPO_IMPL[Repository Implementations]
         DS[DataSources remote + local + mock]
-        DTO[Models / DTOs]
+        DTO["Models e DTOs"]
     end
-    UI --> VM --> UC --> REPO_IF
+    UI --> VM
+    VM --> UC
+    UC --> REPO_IF
     REPO_IF -.->|interface| REPO_IMPL
     REPO_IMPL --> DS
     DS --> DTO
@@ -39,7 +41,7 @@ graph TB
 
 ```mermaid
 graph TB
-    User[Usuário / emulador]
+    User["Usuario emulador"]
     subgraph Host["super_app (único deployable)"]
         Main[main.dart]
         DI[GetIt injection_container]
@@ -59,21 +61,21 @@ graph TB
     end
     subgraph Core["Core packages"]
         Ifaces[core_interfaces]
-        Net[core_network / Dio]
+        Net["core_network Dio"]
         Stor[core_storage]
         Nav[core_navigation]
-        Hub[core_communication / ApplicationHub]
+        Hub["core_communication ApplicationHub"]
         Flags[core_feature_flags]
         Log[core_logging]
         An[core_analytics]
-        Sec[core_security — NÃO ligado no host]
+        Sec["core_security (nao ligado no host)"]
     end
     subgraph Shared["Shared"]
         DS[design_system]
         Utils[shared_utils]
     end
-    API["https://api.dev.example.com/v1<br/>(placeholder; mock_data=true)"]
-    Prefs[(SharedPreferences / Hive / Keychain via core_storage)]
+    API["api.dev.example.com (placeholder, mock_data true)"]
+    Prefs[("SharedPreferences Hive Keychain")]
 
     User --> Main
     Main --> DI
@@ -84,7 +86,7 @@ graph TB
     MicroApps --> Ifaces
     MicroApps --> DS
     Host --> Core
-    Net -.->|não chamado em runtime mock| API
+    Net -.->|nao chamado em runtime mock| API
     Stor --> Prefs
 ```
 
@@ -101,16 +103,16 @@ sequenceDiagram
     participant DS as AuthMockDataSource
     participant Host as AuthServiceImpl
 
-    W->>B: add(login event)
-    B->>UC: executeWithEmailAndPassword(email, password)
-    UC->>R: loginWithEmailAndPassword(...)
-    R->>DS: loginWithEmailAndPassword(...)
-    Note over DS: delay 500ms; compara email/senha fixos
+    W->>B: add login event
+    B->>UC: executeWithEmailAndPassword
+    UC->>R: loginWithEmailAndPassword
+    R->>DS: loginWithEmailAndPassword
+    Note over DS: delay 500ms, compara email e senha fixos
     DS-->>R: UserModel
     R-->>UC: User
     UC-->>B: User
     B-->>W: emit authenticated state
-    Note over Host: AuthServiceImpl.login é um segundo caminho<br/>in-memory (fake_token), não o mesmo que o UseCase
+    Note over Host: AuthServiceImpl.login e um segundo caminho in-memory, nao o UseCase
 ```
 
 Há **dois** mecanismos de “auth” coexistindo: o micro-app `auth` (CA + mock datasource) e o `AuthServiceImpl` do host (token em campo de instância, sem persistência). O host injeta `AuthService` nas `MicroAppDependencies` (`super_app/lib/main.dart:L26-L36`) mas o login de UI passa pelo `AuthBloc`/`LoginUseCase` e **não** chama `AuthService.login`.
@@ -125,12 +127,12 @@ sequenceDiagram
     participant B as PixBloc
     participant UC as SendPixUseCase
     participant R as PixRepositoryImpl
-    participant DS as PixMock / Remote DataSource
+    participant DS as PixMock or Remote DataSource
 
     W->>B: send pix event
-    B->>UC: execute(pixKey, type, amount, ...)
-    UC->>R: sendPix(...)
-    R->>DS: sendPix(...)
+    B->>UC: execute pixKey type amount
+    UC->>R: sendPix
+    R->>DS: sendPix
     DS-->>R: PixTransaction
     R-->>UC: PixTransaction
     UC-->>B: PixTransaction

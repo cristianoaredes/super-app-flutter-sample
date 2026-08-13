@@ -90,7 +90,7 @@ graph TB
     Stor --> Ifaces
     Sec[core_security]
     Sec --> Ifaces
-    Sec -.->|não referenciado pelo host| Host
+    Sec -.->|nao referenciado pelo host| Host
 ```
 
 Não foi encontrado ciclo de path-deps entre micro-apps (nenhum micro-app depende de outro no `pubspec.yaml`).

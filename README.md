@@ -92,8 +92,8 @@ graph TD
     end
 
     subgraph "Inside each Micro App"
-        UI[Presentation] --> BLoC[BLoC / Cubit]
-        BLoC --> Domain[Domain / Use Cases]
+        UI[Presentation] --> BLoC["BLoC Cubit"]
+        BLoC --> Domain["Domain Use Cases"]
         Repo[Repository] --> Domain
         DS[Data Source] --> Repo
     end
