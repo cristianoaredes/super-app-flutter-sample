@@ -249,4 +249,10 @@ Built by [Cristiano Aredes](https://github.com/cristianoaredes).
 
 ---
 
+## Governance
+
+This repository is governed by **[codebase-ops](AGENTS.md)** — a development operating system for existing codebases. It is a skill plus `/ops-*` commands that AI agents (and humans) follow: intake → design → execute → verify → ship, with a non-negotiable safety floor. Project truth lives in [`.archagents/`](.archagents/README.md), not in chat history.
+
+---
+
 <!-- SEO: Flutter super app, Flutter architecture, micro apps Flutter, GoRouter Flutter, GetIt Flutter, BLoC Flutter, Flutter modular architecture, Flutter clean architecture, Flutter banking app, Flutter reference architecture -->
