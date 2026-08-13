@@ -1,3 +1,5 @@
+import 'package:core_interfaces/core_interfaces.dart';
+
 import '../entities/pix_key.dart';
 import '../entities/pix_transaction.dart';
 import '../repositories/pix_repository.dart';
@@ -17,6 +19,18 @@ class SendPixUseCase {
     String? description,
     String? receiverName,
   }) {
+    if (pixKeyValue.trim().isEmpty) {
+      throw ValidationException(
+        message: 'Chave Pix inválida',
+        fieldErrors: const {'pixKeyValue': 'obrigatória'},
+      );
+    }
+    if (amount <= 0) {
+      throw ValidationException(
+        message: 'Valor Pix inválido',
+        fieldErrors: const {'amount': 'deve ser maior que zero'},
+      );
+    }
     return _repository.sendPix(
       pixKeyValue: pixKeyValue,
       pixKeyType: pixKeyType,

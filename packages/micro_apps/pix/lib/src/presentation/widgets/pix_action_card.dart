@@ -49,6 +49,9 @@ class PixActionCard extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: themeColor,
           ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

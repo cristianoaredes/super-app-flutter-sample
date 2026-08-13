@@ -1,0 +1,13 @@
+id,title,status,severity,notes
+FND-0001,Senha e corpo HTTP em log de debug,open,high,security; TCK-0001
+FND-0002,PII e CVV no modelo / storage local inseguro,open,medium,security; TCK-0002
+FND-0003,Rotas de negócio sem AuthZ,open,medium,security; TCK-0003
+FND-0004,Login do AuthBloc não autentica o AuthService do host,open,high,reliability; TCK-0004
+FND-0005,Use cases PIX/pagamento sem invariantes nem idempotência,open,medium,reliability; TCK-0005
+FND-0006,`core_security` e o guia SECURITY.md não estão no runtime,open,medium,architecture; TCK-0006
+FND-0007,Infraestrutura morta e duplicada (hub, flags, impls do host),open,medium,architecture; TCK-0007
+FND-0008,CI não dispara no `master` e pinna Flutter incompatível,open,high,reliability; TCK-0008
+FND-0009,Testes de PIX/pagamentos exercitam mocks, não regras de domínio,open,medium,test-coverage; TCK-0009
+FND-0010,Sem agregação de crash; debug de rota sempre ligado; logs sem correlação,open,medium,observability; TCK-0010
+FND-0011,Constraints de SDK e lint divergentes entre pacotes,open,medium,dependency; TCK-0011
+FND-0012,HydratedCubit de pagamentos acessa storage antes do init (web),open,high,reliability; TCK-0012

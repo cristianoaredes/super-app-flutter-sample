@@ -37,7 +37,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel?> getUser() async {
-    final userJson = await _storageService.getValue<String>(_userKey);
+    final userJson =
+        await _storageService.secureStorage.getSecureValue(_userKey);
 
     if (userJson == null) {
       return null;
@@ -54,11 +55,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> saveUser(UserModel user) async {
     final userJson = jsonEncode(user.toJson());
-    await _storageService.setValue(_userKey, userJson);
+    await _storageService.secureStorage.setSecureValue(_userKey, userJson);
+    await _storageService.removeValue(_userKey);
   }
 
   @override
   Future<void> removeUser() async {
+    await _storageService.secureStorage.removeSecureValue(_userKey);
     await _storageService.removeValue(_userKey);
   }
 

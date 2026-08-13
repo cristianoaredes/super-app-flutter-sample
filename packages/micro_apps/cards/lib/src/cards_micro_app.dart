@@ -1,6 +1,7 @@
 import 'package:core_interfaces/core_interfaces.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
+import 'package:get_it/get_it.dart';
 import 'package:shared_utils/shared_utils.dart';
 
 import 'di/cards_injector.dart';
@@ -123,8 +124,8 @@ class CardsMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o Bloc está em estado válido
-      final state = _cardsBloc!.state;
-      return state != null;
+      final _ = _cardsBloc!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para CardsBloc',

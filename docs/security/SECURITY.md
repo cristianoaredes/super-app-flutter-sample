@@ -1,6 +1,6 @@
 # Guia de Segurança - Premium Bank Super App
 
-Este documento descreve as práticas de segurança implementadas no Premium Bank Super App e diretrizes para desenvolvimento seguro.
+Este documento é um **guia de práticas** para quem for evoluir o sample. O host **não** liga `core_security` (pinning, biometria, `FlutterSecureStorage` deste pacote). O runtime atual usa `core_storage` + mocks. Trate as receitas abaixo como alvo, não como AS-IS.
 
 ## Índice
 

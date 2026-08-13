@@ -1,0 +1,13 @@
+id,slug,title,status,priority,type,effort,source,reopened_count,rollback_commit,hotfix_for,escaped_defect,created_at,done_at
+TCK-0001,redact-auth-and-http-logs,Redigir senha e corpo/headers HTTP nos logs,done,high,security,S,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0002,stop-storing-cvv-and-user-in-prefs,Não persistir CVV no domínio nem user JSON em SharedPreferences,done,medium,security,S,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0003,guard-authenticated-routes,Guardar rotas de negócio com sessão autenticada,done,medium,security,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0004,wire-login-to-host-auth-service,Ligar login do AuthBloc ao AuthService / splash,done,high,reliability,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0005,pix-payment-invariants,Invariantes e idempotência nos use cases PIX/pagamento,done,medium,reliability,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0006,wire-or-stop-claiming-core-security,Ligar core_security ou parar de documentá-lo como runtime,done,medium,architecture,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0007,remove-dead-infra-and-fix-base-micro-app-import,Remover infra morta e corrigir import de BaseMicroApp,done,medium,architecture,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0008,fix-ci-branch-and-flutter-pin,Alinhar CI à branch default e ao Flutter do host,done,high,reliability,S,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0009,test-pix-usecase-and-login-flow,Testar SendPixUseCase e o fluxo splash→login,done,medium,test-coverage,M,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0010,quiet-router-debug-and-structure-logs,Desligar debugLogDiagnostics em release e estruturar logs,done,medium,observability,S,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0011,align-sdk-and-lint-constraints,Unificar SDK Flutter/Dart e flutter_lints no Melos,done,medium,dependency,S,assessment,,,,,2026-08-12T22:15:00Z,
+TCK-0012,hydrate-storage-before-payments-cubit,Bootstrap HydratedStorage em todos os alvos antes de HydratedCubit,done,high,reliability,S,bug,,,,,2026-08-12T23:05:00Z,2026-08-12T23:20:00Z

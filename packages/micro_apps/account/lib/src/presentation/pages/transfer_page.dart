@@ -64,8 +64,8 @@ class _TransferPageState extends State<TransferPage> {
       appBar: AppBar(
         title: const Text('Transferência'),
       ),
-      body: BlocProvider<AccountBloc>(
-        create: (context) => GetIt.instance<AccountBloc>(),
+      body: BlocProvider<AccountBloc>.value(
+        value: GetIt.instance<AccountBloc>(),
         child: BlocConsumer<AccountBloc, AccountState>(
           listener: (context, state) {
             if (state is TransferMoneySuccessState) {

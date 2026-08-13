@@ -1,6 +1,7 @@
 import 'package:core_interfaces/core_interfaces.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
+import 'package:get_it/get_it.dart';
 
 import 'di/account_injector.dart';
 import 'presentation/bloc/account_bloc.dart';
@@ -107,8 +108,8 @@ class AccountMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o Bloc está em estado válido
-      final state = _accountBloc!.state;
-      return state != null;
+      final _ = _accountBloc!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para AccountBloc',

@@ -27,7 +27,10 @@ class _ReceivePixPageState extends State<ReceivePixPage> {
   @override
   void initState() {
     super.initState();
-    context.read<PixBloc>().add(const LoadPixKeysEvent());
+    final bloc = context.read<PixBloc>();
+    if (!bloc.isClosed) {
+      bloc.add(const LoadPixKeysEvent());
+    }
   }
 
   @override

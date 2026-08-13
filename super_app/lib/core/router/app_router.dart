@@ -1,4 +1,5 @@
 import 'package:core_interfaces/core_interfaces.dart' as core_interfaces;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +44,7 @@ class AppRouter {
     return GoRouter(
       navigatorKey: _rootNavigatorKey,
       initialLocation: '/',
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: kDebugMode,
       redirect: _microAppInitializer.redirect,
       routes: [
         GoRoute(

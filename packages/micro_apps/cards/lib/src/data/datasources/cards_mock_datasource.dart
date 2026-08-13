@@ -28,7 +28,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'credit',
         brand: 'Mastercard',
         expirationDate: DateTime.now().add(const Duration(days: 365 * 2)),
-        cvv: '123',
+
         limit: 5000.0,
         availableLimit: 3500.0,
         isBlocked: false,
@@ -43,7 +43,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'debit',
         brand: 'Visa',
         expirationDate: DateTime.now().add(const Duration(days: 365 * 3)),
-        cvv: '456',
+
         limit: 0.0,
         availableLimit: 0.0,
         isBlocked: false,
@@ -58,7 +58,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'credit',
         brand: 'Visa',
         expirationDate: DateTime.now().add(const Duration(days: 365)),
-        cvv: '789',
+
         limit: 2000.0,
         availableLimit: 1500.0,
         isBlocked: false,
@@ -88,7 +88,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'credit',
         brand: 'Mastercard',
         expirationDate: DateTime.now().add(const Duration(days: 365 * 2)),
-        cvv: '123',
+
         limit: 5000.0,
         availableLimit: 3500.0,
         isBlocked: false,
@@ -103,7 +103,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'debit',
         brand: 'Visa',
         expirationDate: DateTime.now().add(const Duration(days: 365 * 3)),
-        cvv: '456',
+
         limit: 0.0,
         availableLimit: 0.0,
         isBlocked: false,
@@ -118,7 +118,7 @@ class CardsMockDataSource implements CardsRemoteDataSource {
         type: 'credit',
         brand: 'Visa',
         expirationDate: DateTime.now().add(const Duration(days: 365)),
-        cvv: '789',
+
         limit: 2000.0,
         availableLimit: 1500.0,
         isBlocked: false,

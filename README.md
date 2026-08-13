@@ -44,7 +44,7 @@ super-app-flutter-sample/
 │   │   ├── core_logging/        # Logging service
 │   │   ├── core_navigation/     # Navigation service (GoRouter wrapper)
 │   │   ├── core_network/        # HTTP client abstraction (Dio)
-│   │   ├── core_security/       # Security utilities
+│   │   ├── core_security/       # Optional security kit (not wired in the host)
 │   │   └── core_storage/        # Persistent storage (SharedPreferences)
 │   │
 │   ├── micro_apps/              # Feature packages — each is an independent module

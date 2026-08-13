@@ -1,6 +1,7 @@
 import 'package:core_interfaces/core_interfaces.dart' hide BlocProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_utils/shared_utils.dart';
 
 import 'di/pix_injector.dart';
@@ -38,10 +39,10 @@ class PixMicroApp extends BaseMicroApp {
   PixBloc get pixBloc {
     ensureInitialized();
 
-    if (_pixBloc == null) {
-      throw InvalidStateException(
-        message: 'PixBloc não foi inicializado corretamente.',
-      );
+    if (_pixBloc == null || _pixBloc!.isClosed) {
+      // Factory no GetIt: uma instância nova se a anterior foi fechada
+      // (ex.: BlocProvider(create:) antigo chamava close() ao sair da rota).
+      _pixBloc = getIt<PixBloc>();
     }
 
     return _pixBloc!;
@@ -51,43 +52,43 @@ class PixMicroApp extends BaseMicroApp {
   Map<String, GoRouteBuilder> get routes => {
         '/pix': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const PixHomePage(),
           );
         },
         '/pix/keys': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const PixKeysPage(),
           );
         },
         '/pix/keys/register': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const RegisterPixKeyPage(),
           );
         },
         '/pix/send': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const SendPixPage(),
           );
         },
         '/pix/receive': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const ReceivePixPage(),
           );
         },
         '/pix/scan': (context, state) {
           ensureInitialized();
-          return BlocProvider<PixBloc>(
-            create: (context) => pixBloc,
+          return BlocProvider<PixBloc>.value(
+            value: pixBloc,
             child: const PixQrCodeScannerPage(),
           );
         },
@@ -101,8 +102,8 @@ class PixMicroApp extends BaseMicroApp {
               'id',
             );
 
-            return BlocProvider<PixBloc>(
-              create: (context) => pixBloc,
+            return BlocProvider<PixBloc>.value(
+              value: pixBloc,
               child: PixTransactionDetailsPage(transactionId: id),
             );
           } on RouteParamException catch (e) {
@@ -156,8 +157,8 @@ class PixMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o Bloc está em estado válido
-      final state = _pixBloc!.state;
-      return state != null;
+      final _ = _pixBloc!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para PixBloc',
@@ -171,8 +172,8 @@ class PixMicroApp extends BaseMicroApp {
   @override
   Widget build(BuildContext context) {
     ensureInitialized();
-    return BlocProvider<PixBloc>(
-      create: (context) => pixBloc,
+    return BlocProvider<PixBloc>.value(
+      value: pixBloc,
       child: const PixHomePage(),
     );
   }

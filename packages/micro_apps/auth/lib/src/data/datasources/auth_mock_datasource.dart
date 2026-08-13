@@ -10,8 +10,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   Future<UserModel> loginWithEmailAndPassword(
       String email, String password) async {
     if (kDebugMode) {
-      print('🌐 AuthMockDataSource.loginWithEmailAndPassword');
-      print('Email: $email, Password: $password');
+      print('AuthMockDataSource.loginWithEmailAndPassword');
     }
 
     await Future.delayed(const Duration(milliseconds: 500));
@@ -66,8 +65,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   @override
   Future<UserModel> register(String name, String email, String password) async {
     if (kDebugMode) {
-      print('🌐 AuthMockDataSource.register');
-      print('Name: $name, Email: $email, Password: $password');
+      print('AuthMockDataSource.register');
     }
 
     await Future.delayed(const Duration(milliseconds: 500));

@@ -29,35 +29,38 @@ class AccountActionsCard extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildActionButton(
-                  context,
-                  'Transferir',
-                  Icons.send,
-                  onTransferTap,
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Transferir',
+                    Icons.send,
+                    onTransferTap,
+                  ),
                 ),
-                _buildActionButton(
-                  context,
-                  'Extrato',
-                  Icons.receipt_long,
-                  onStatementTap,
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Extrato',
+                    Icons.receipt_long,
+                    onStatementTap,
+                  ),
                 ),
-                _buildActionButton(
-                  context,
-                  'Pix',
-                  Icons.bolt,
-                  () {
-                    
-                  },
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Pix',
+                    Icons.bolt,
+                    () {},
+                  ),
                 ),
-                _buildActionButton(
-                  context,
-                  'Cartões',
-                  Icons.credit_card,
-                  () {
-                    
-                  },
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Cartões',
+                    Icons.credit_card,
+                    () {},
+                  ),
                 ),
               ],
             ),
@@ -103,6 +106,9 @@ class AccountActionsCard extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: Theme.of(context).colorScheme.primary,
           ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

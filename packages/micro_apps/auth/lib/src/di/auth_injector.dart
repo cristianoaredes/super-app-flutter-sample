@@ -1,5 +1,4 @@
 import 'package:core_interfaces/core_interfaces.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 import '../data/datasources/auth_remote_datasource.dart';
@@ -18,18 +17,14 @@ class AuthInjector {
   
   static void register(GetIt getIt) {
     
-    if (kDebugMode) {
-      print('🌐 Registering AuthRemoteDataSource');
-    }
+
 
     
     final appConfig = getIt<AppConfig>();
     final useMockData = appConfig.getValue<bool>('mock_data') ?? false;
 
     if (useMockData) {
-      if (kDebugMode) {
-        print('🌐 Using AuthMockDataSource for development environment');
-      }
+
       getIt.registerLazySingleton<AuthRemoteDataSource>(
         () => AuthMockDataSource(),
       );
@@ -92,6 +87,8 @@ class AuthInjector {
         registerUseCase: getIt<RegisterUseCase>(),
         resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
         analyticsService: getIt<AnalyticsService>(),
+        authService: getIt<AuthService>(),
+        authRepository: getIt<AuthRepository>(),
       ),
     );
   }

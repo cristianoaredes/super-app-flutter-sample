@@ -90,8 +90,8 @@ class AuthMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o BLoC está em estado válido
-      final state = _authBloc!.state;
-      return state != null;
+      final _ = _authBloc!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para AuthBloc',

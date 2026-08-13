@@ -4,6 +4,11 @@ import 'package:get_it/get_it.dart';
 
 import '../../di/navigation_service_locator.dart';
 
+/// Session-aware first hop after the splash delay. Used by [SplashPage].
+String postSplashLocation(AuthService authService) {
+  return authService.isAuthenticated ? '/dashboard' : '/login';
+}
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -27,11 +32,7 @@ class _SplashPageState extends State<SplashPage> {
 
     final authService = GetIt.instance<AuthService>();
 
-    if (authService.isAuthenticated) {
-      navigationService.navigateTo('/dashboard');
-    } else {
-      navigationService.navigateTo('/login');
-    }
+    navigationService.navigateTo(postSplashLocation(authService));
   }
 
   @override

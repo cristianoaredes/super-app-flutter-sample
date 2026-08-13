@@ -139,7 +139,7 @@ melos run test
 melos run analyze
 
 # Formate código
-melos run format
+dart format .
 ```
 
 ---
@@ -485,7 +485,7 @@ melos run test
 melos run analyze
 
 # 4. Formate código
-melos run format
+dart format .
 
 # 5. Verifique mudanças
 git diff main...feature/minha-feature
@@ -574,7 +574,7 @@ cd packages/micro_apps/auth
 flutter test
 
 # Com cobertura
-melos run test:coverage
+melos run test
 
 # Apenas testes modificados
 flutter test --test-randomize-ordering-seed random

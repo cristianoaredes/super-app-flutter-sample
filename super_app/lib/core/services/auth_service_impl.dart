@@ -40,7 +40,6 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<bool> refreshToken() async {
-    
     await Future.delayed(const Duration(seconds: 1));
 
     if (_isAuthenticated) {
@@ -49,5 +48,12 @@ class AuthServiceImpl implements AuthService {
     }
 
     return false;
+  }
+
+  @override
+  void establishSession({required String userId, String? accessToken}) {
+    _userId = userId;
+    _accessToken = accessToken ?? _accessToken ?? 'session_$userId';
+    _isAuthenticated = true;
   }
 }

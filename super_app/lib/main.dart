@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pix/pix.dart';
+import 'package:payments/payments.dart' show ensureHydratedStorage;
 import 'package:get_it/get_it.dart';
 
 import 'core/di/injection_container.dart' as di;
@@ -18,6 +19,7 @@ final blocRegistry = core_interfaces.BlocRegistry();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ensureHydratedStorage();
 
   await di.init();
 
@@ -308,7 +310,7 @@ class _SuperAppState extends State<SuperApp> {
     final blocProviders = <BlocProvider>[];
 
     blocProviders.add(
-      BlocProvider<ThemeBloc>(create: (context) => getIt<ThemeBloc>()),
+      BlocProvider<ThemeBloc>.value(value: getIt<ThemeBloc>()),
     );
 
     if (blocRegistry.contains<PixBloc>()) {

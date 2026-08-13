@@ -28,7 +28,6 @@ void main() {
     type: 'Credit',
     brand: 'Visa',
     expirationDate: DateTime(2025, 12, 31),
-    cvv: '123',
     limit: 10000.0,
     availableLimit: 8000.0,
     isBlocked: false,

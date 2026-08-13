@@ -25,7 +25,10 @@ class _PixTransactionDetailsPageState extends State<PixTransactionDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<PixBloc>().add(LoadPixTransactionEvent(id: widget.transactionId));
+    final bloc = context.read<PixBloc>();
+    if (!bloc.isClosed) {
+      bloc.add(LoadPixTransactionEvent(id: widget.transactionId));
+    }
   }
   
   void _copyToClipboard(String text) {

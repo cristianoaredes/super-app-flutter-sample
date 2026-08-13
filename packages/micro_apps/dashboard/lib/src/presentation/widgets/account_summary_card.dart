@@ -32,18 +32,26 @@ class AccountSummaryCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Saldo Disponível',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
+                  const Expanded(
+                    child: Text(
+                      'Saldo Disponível',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Text(
-                    'Ag. ${accountSummary.agency} | Conta ${accountSummary.accountNumber}',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.grey.shade600,
+                  const SizedBox(width: 8.0),
+                  Flexible(
+                    child: Text(
+                      'Ag. ${accountSummary.agency} | Conta ${accountSummary.accountNumber}',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey.shade600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
                     ),
                   ),
                 ],
@@ -62,28 +70,33 @@ class AccountSummaryCard extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 8.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildFinancialItem(
-                    context,
-                    'Receitas',
-                    accountSummary.income.toBRL,
-                    Icons.arrow_downward,
-                    Colors.green,
+                  Expanded(
+                    child: _buildFinancialItem(
+                      context,
+                      'Receitas',
+                      accountSummary.income.toBRL,
+                      Icons.arrow_downward,
+                      Colors.green,
+                    ),
                   ),
-                  _buildFinancialItem(
-                    context,
-                    'Despesas',
-                    accountSummary.expenses.toBRL,
-                    Icons.arrow_upward,
-                    Colors.red,
+                  Expanded(
+                    child: _buildFinancialItem(
+                      context,
+                      'Despesas',
+                      accountSummary.expenses.toBRL,
+                      Icons.arrow_upward,
+                      Colors.red,
+                    ),
                   ),
-                  _buildFinancialItem(
-                    context,
-                    'Investimentos',
-                    accountSummary.investments.toBRL,
-                    Icons.trending_up,
-                    Colors.purple,
+                  Expanded(
+                    child: _buildFinancialItem(
+                      context,
+                      'Investimentos',
+                      accountSummary.investments.toBRL,
+                      Icons.trending_up,
+                      Colors.purple,
+                    ),
                   ),
                 ],
               ),
@@ -122,6 +135,8 @@ class AccountSummaryCard extends StatelessWidget {
             fontSize: 12.0,
             color: Colors.grey.shade600,
           ),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 2.0),
         Text(
@@ -131,6 +146,8 @@ class AccountSummaryCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: color,
           ),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
         ),
       ],
     );

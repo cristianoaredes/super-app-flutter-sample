@@ -30,19 +30,24 @@ class QuickActionsGrid extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: quickActions.length,
-              itemBuilder: (context, index) {
-                final action = quickActions[index];
-                return _QuickActionItem(action: action);
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final crossAxisCount = constraints.maxWidth < 360 ? 2 : 4;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    mainAxisExtent: 96.0,
+                  ),
+                  itemCount: quickActions.length,
+                  itemBuilder: (context, index) {
+                    final action = quickActions[index];
+                    return _QuickActionItem(action: action);
+                  },
+                );
               },
             ),
           ],
@@ -60,9 +65,7 @@ class _QuickActionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 98.0, 
-      child: Column(
+    return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Material(
@@ -114,7 +117,6 @@ class _QuickActionItem extends StatelessWidget {
             ),
           ),
         ],
-      ),
     );
   }
 }

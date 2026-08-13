@@ -20,7 +20,10 @@ class _PixKeysPageState extends State<PixKeysPage> {
   @override
   void initState() {
     super.initState();
-    context.read<PixBloc>().add(const LoadPixKeysEvent());
+    final bloc = context.read<PixBloc>();
+    if (!bloc.isClosed) {
+      bloc.add(const LoadPixKeysEvent());
+    }
   }
 
   void _navigateToRegisterPixKey() {

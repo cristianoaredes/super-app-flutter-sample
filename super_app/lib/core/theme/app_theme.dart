@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -49,7 +50,7 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: _primaryColor),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 4,
         shadowColor: _primaryColor.withOpacity(0.3),
         surfaceTintColor: Colors.transparent,
@@ -233,7 +234,7 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: _primaryColor),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 4,
         shadowColor: _primaryColor.withOpacity(0.5),
         surfaceTintColor: Colors.transparent,

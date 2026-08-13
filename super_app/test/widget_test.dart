@@ -1,29 +1,8 @@
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:super_app/main.dart';
+import 'package:super_app/core/router/route_middleware.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    
-    await tester.pumpWidget(const SuperApp());
-
-    
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('host keeps a public splash route', () {
+    expect(isPublicAppRoute('/'), isTrue);
   });
 }

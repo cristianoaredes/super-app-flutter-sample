@@ -1,11 +1,11 @@
 import 'package:core_interfaces/core_interfaces.dart';
-import 'package:flutter/material.dart';
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_utils/shared_utils.dart';
+
+import 'bootstrap/hydrated_storage_bootstrap.dart';
 
 import 'data/repositories/payment_repository_impl.dart';
 import 'data/datasources/payment_remote_data_source.dart';
@@ -40,9 +40,15 @@ class PaymentsMicroApp extends BaseMicroApp {
   PaymentsCubit get paymentsCubit {
     ensureInitialized();
 
-    if (_paymentsCubit == null) {
-      throw InvalidStateException(
-        message: 'PaymentsCubit não foi inicializado corretamente.',
+    if (_paymentsCubit == null || _paymentsCubit!.isClosed) {
+      if (_paymentRepository == null) {
+        throw InvalidStateException(
+          message: 'PaymentsCubit não foi inicializado corretamente.',
+        );
+      }
+      _paymentsCubit = PaymentsCubit(
+        repository: _paymentRepository!,
+        analyticsService: dependencies.analyticsService,
       );
     }
 
@@ -54,8 +60,8 @@ class PaymentsMicroApp extends BaseMicroApp {
         '/payments': (context, state) {
           ensureInitialized();
 
-          return flutter_bloc.BlocProvider<PaymentsCubit>(
-            create: (context) => paymentsCubit,
+          return flutter_bloc.BlocProvider<PaymentsCubit>.value(
+            value: paymentsCubit,
             child: const PaymentsPage(),
           );
         },
@@ -69,8 +75,8 @@ class PaymentsMicroApp extends BaseMicroApp {
               'id',
             );
 
-            return flutter_bloc.BlocProvider<PaymentsCubit>(
-              create: (context) => paymentsCubit,
+            return flutter_bloc.BlocProvider<PaymentsCubit>.value(
+              value: paymentsCubit,
               child: PaymentDetailPage(id: id),
             );
           } on RouteParamException catch (e) {
@@ -81,19 +87,14 @@ class PaymentsMicroApp extends BaseMicroApp {
 
   @override
   Future<void> onInitialize(MicroAppDependencies dependencies) async {
-    // Configurar HydratedBloc para persistência (apenas mobile/desktop)
-    if (!kIsWeb) {
-      try {
-        final tempDir = Directory.systemTemp.createTempSync('hydrated_bloc');
-        HydratedBloc.storage = await HydratedStorage.build(
-          storageDirectory: tempDir,
-        );
-      } catch (e) {
-        dependencies.loggingService?.warning(
-          'Falha ao configurar HydratedBloc storage: $e',
-          tag: 'PaymentsMicroApp',
-        );
-      }
+    try {
+      await ensureHydratedStorage();
+    } catch (e) {
+      dependencies.loggingService?.warning(
+        'Falha ao configurar HydratedBloc storage: $e',
+        tag: 'PaymentsMicroApp',
+      );
+      rethrow;
     }
 
     // Determinar se deve usar mock data
@@ -158,8 +159,8 @@ class PaymentsMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o Cubit está em estado válido
-      final state = _paymentsCubit!.state;
-      return state != null;
+      final _ = _paymentsCubit!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para PaymentsCubit',
@@ -173,8 +174,8 @@ class PaymentsMicroApp extends BaseMicroApp {
   @override
   Widget build(BuildContext context) {
     ensureInitialized();
-    return flutter_bloc.BlocProvider<PaymentsCubit>(
-      create: (context) => paymentsCubit,
+    return flutter_bloc.BlocProvider<PaymentsCubit>.value(
+      value: paymentsCubit,
       child: const PaymentsPage(),
     );
   }

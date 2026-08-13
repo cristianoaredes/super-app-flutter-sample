@@ -8,7 +8,6 @@ class Card extends Equatable {
   final String type;
   final String brand;
   final DateTime expirationDate;
-  final String cvv;
   final double limit;
   final double availableLimit;
   final bool isBlocked;
@@ -23,7 +22,6 @@ class Card extends Equatable {
     required this.type,
     required this.brand,
     required this.expirationDate,
-    required this.cvv,
     required this.limit,
     required this.availableLimit,
     required this.isBlocked,
@@ -40,7 +38,6 @@ class Card extends Equatable {
     type,
     brand,
     expirationDate,
-    cvv,
     limit,
     availableLimit,
     isBlocked,
@@ -57,7 +54,6 @@ class Card extends Equatable {
     String? type,
     String? brand,
     DateTime? expirationDate,
-    String? cvv,
     double? limit,
     double? availableLimit,
     bool? isBlocked,
@@ -72,7 +68,6 @@ class Card extends Equatable {
       type: type ?? this.type,
       brand: brand ?? this.brand,
       expirationDate: expirationDate ?? this.expirationDate,
-      cvv: cvv ?? this.cvv,
       limit: limit ?? this.limit,
       availableLimit: availableLimit ?? this.availableLimit,
       isBlocked: isBlocked ?? this.isBlocked,
