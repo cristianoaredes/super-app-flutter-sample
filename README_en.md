@@ -137,7 +137,7 @@ graph TD
     MicroApps --> Splash[Splash]
 
     subgraph "Micro App Architecture"
-        UI[Presentation Layer] --> |Uses| Bloc[BLoC/Cubit]
+        UI[Presentation Layer] --> |Uses| Bloc["BLoC Cubit"]
         Bloc --> |Uses| Domain[Domain Layer]
         Repositories[Repository Layer] --> |Implements| Domain
         DataSources[Data Sources] --> |Feeds| Repositories
