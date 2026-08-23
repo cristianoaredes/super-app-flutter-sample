@@ -44,7 +44,7 @@ super-app-flutter-sample/
 │   │   ├── core_logging/        # Logging service
 │   │   ├── core_navigation/     # Navigation service (GoRouter wrapper)
 │   │   ├── core_network/        # HTTP client abstraction (Dio)
-│   │   ├── core_security/       # Security utilities
+│   │   ├── core_security/       # Optional security kit (not wired in the host)
 │   │   └── core_storage/        # Persistent storage (SharedPreferences)
 │   │
 │   ├── micro_apps/              # Feature packages — each is an independent module
@@ -92,8 +92,8 @@ graph TD
     end
 
     subgraph "Inside each Micro App"
-        UI[Presentation] --> BLoC[BLoC / Cubit]
-        BLoC --> Domain[Domain / Use Cases]
+        UI[Presentation] --> BLoC["BLoC Cubit"]
+        BLoC --> Domain["Domain Use Cases"]
         Repo[Repository] --> Domain
         DS[Data Source] --> Repo
     end
@@ -246,6 +246,12 @@ Built by [Cristiano Aredes](https://github.com/cristianoaredes).
 
 - LinkedIn: [cristianoaredes](https://www.linkedin.com/in/cristianoaredes/)
 - Email: cristiano@aredes.me
+
+---
+
+## Governance
+
+This repository is governed by **[codebase-ops](AGENTS.md)** — a development operating system for existing codebases. It is a skill plus `/ops-*` commands that AI agents (and humans) follow: intake → design → execute → verify → ship, with a non-negotiable safety floor. Project truth lives in [`.archagents/`](.archagents/README.md), not in chat history.
 
 ---
 

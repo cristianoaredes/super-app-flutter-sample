@@ -113,19 +113,27 @@ class _AccountBalanceCardState extends State<AccountBalanceCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-            color: valueColor,
+        const SizedBox(width: 8.0),
+        Flexible(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+              color: valueColor,
+            ),
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
           ),
         ),
       ],

@@ -1,0 +1,8 @@
+# scanner-allowlist — exceções revisáveis dos scanners do piso de segurança.
+# Formato: um caminho por linha, prefixo opcional de escopo
+# (safety-check: / secret-scan: / sem prefixo = ambos).
+
+# Detector do próprio framework: o arquivo contém a expressão regular que
+# procura padrões de push forçado e de reset destrutivo dentro do diff julgado.
+# É o código que DETECTA o padrão, não que o executa.
+safety-check:scripts/pipeline/pipeline-judge.py

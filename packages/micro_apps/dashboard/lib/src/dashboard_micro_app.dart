@@ -98,8 +98,8 @@ class DashboardMicroApp extends BaseMicroApp {
 
     try {
       // Verifica se o BLoC está em estado válido
-      final state = _dashboardBloc!.state;
-      return state != null;
+      final _ = _dashboardBloc!.state;
+      return true;
     } catch (e) {
       dependencies.loggingService?.error(
         'Health check falhou para DashboardBloc',

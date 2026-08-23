@@ -220,7 +220,12 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Não tem uma conta?'),
+                        const Flexible(
+                          child: Text(
+                            'Não tem uma conta?',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                         TextButton(
                           onPressed: _navigateToRegister,
                           child: const Text('Registre-se'),

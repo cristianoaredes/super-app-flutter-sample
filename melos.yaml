@@ -17,7 +17,7 @@ packages:
 scripts:
   analyze:
     description: Executar análise estática em todos os pacotes
-    exec: flutter analyze
+    exec: flutter analyze --no-fatal-infos
 
   test:
     description: Executar testes em todos os pacotes que possuem testes

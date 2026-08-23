@@ -46,6 +46,7 @@ void main() {
     // Default: assume internet connection is available
     when(mockNetworkService.hasInternetConnection)
         .thenAnswer((_) async => true);
+    when(mockLocalDataSource.saveAccessToken(any)).thenAnswer((_) async {});
   });
 
   group('AuthRepositoryImpl', () {
@@ -129,6 +130,7 @@ void main() {
           testPassword,
         )).called(1);
         verify(mockLocalDataSource.saveUser(testUserModel)).called(1);
+        verify(mockLocalDataSource.saveAccessToken('session_test-id')).called(1);
       });
 
       test('should throw exception when no internet connection', () async {

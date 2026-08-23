@@ -6,6 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+const Set<String> kPublicAppRoutes = {
+  '/',
+  '/login',
+  '/register',
+  '/reset-password',
+  '/error',
+};
+
+bool isPublicAppRoute(String path) => kPublicAppRoutes.contains(path);
+
+/// Returns `/login` when [path] requires a session and [isAuthenticated] is false.
+String? authRedirectForPath(String path, {required bool isAuthenticated}) {
+  if (isPublicAppRoute(path)) {
+    return null;
+  }
+  if (!isAuthenticated) {
+    return '/login';
+  }
+  return null;
+}
+
 /// Um middleware de rota que inicializa micro apps sob demanda antes de navegação
 class MicroAppInitializerMiddleware {
   final GetIt _getIt;
@@ -41,6 +62,16 @@ class MicroAppInitializerMiddleware {
   /// Função redirect do GoRouter que inicializará o micro app necessário
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) async {
     final path = state.matchedLocation;
+    final isAuthenticated = _getIt.isRegistered<AuthService>() &&
+        _getIt<AuthService>().isAuthenticated;
+    final authRedirect = authRedirectForPath(
+      path,
+      isAuthenticated: isAuthenticated,
+    );
+    if (authRedirect != null) {
+      return authRedirect;
+    }
+
     final microAppName = _getMicroAppNameForRoute(path);
 
     if (microAppName != null) {

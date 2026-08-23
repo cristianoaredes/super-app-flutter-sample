@@ -34,26 +34,11 @@ class _PixHomePageState extends State<PixHomePage>
   }
 
   void _loadDataSafely() {
-    try {
-      if (mounted) {
-        final bloc = context.read<PixBloc>();
-        // Verificar acesso ao state para garantir que o bloc está em um estado válido
-        bloc.state;
-
-        // Se chegou aqui, o bloc está em um estado válido
-        bloc.add(const LoadPixKeysEvent());
-        bloc.add(const LoadPixTransactionsEvent());
-      }
-    } catch (e) {
-      debugPrint('Erro ao carregar dados do Pix: $e');
-      // Se falhou, podemos tentar navegar para o dashboard para forçar a reinicialização
-      try {
-        final navigationService = GetIt.instance<NavigationService>();
-        navigationService.navigateTo('/dashboard');
-      } catch (navigateError) {
-        debugPrint('Erro ao tentar voltar ao dashboard: $navigateError');
-      }
-    }
+    if (!mounted) return;
+    final bloc = context.read<PixBloc>();
+    if (bloc.isClosed) return;
+    bloc.add(const LoadPixKeysEvent());
+    bloc.add(const LoadPixTransactionsEvent());
   }
 
   void _navigateToPixKeys() {
@@ -116,27 +101,34 @@ class _PixHomePageState extends State<PixHomePage>
                       ),
                       const SizedBox(height: 16.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          PixActionCard(
-                            icon: Icons.send,
-                            title: 'Enviar',
-                            onTap: _navigateToSendPix,
+                          Expanded(
+                            child: PixActionCard(
+                              icon: Icons.send,
+                              title: 'Enviar',
+                              onTap: _navigateToSendPix,
+                            ),
                           ),
-                          PixActionCard(
-                            icon: Icons.qr_code,
-                            title: 'Receber',
-                            onTap: _navigateToReceivePix,
+                          Expanded(
+                            child: PixActionCard(
+                              icon: Icons.qr_code,
+                              title: 'Receber',
+                              onTap: _navigateToReceivePix,
+                            ),
                           ),
-                          PixActionCard(
-                            icon: Icons.qr_code_scanner,
-                            title: 'Ler QR Code',
-                            onTap: _navigateToScanQrCode,
+                          Expanded(
+                            child: PixActionCard(
+                              icon: Icons.qr_code_scanner,
+                              title: 'Ler QR Code',
+                              onTap: _navigateToScanQrCode,
+                            ),
                           ),
-                          PixActionCard(
-                            icon: Icons.vpn_key,
-                            title: 'Minhas Chaves',
-                            onTap: _navigateToPixKeys,
+                          Expanded(
+                            child: PixActionCard(
+                              icon: Icons.vpn_key,
+                              title: 'Minhas Chaves',
+                              onTap: _navigateToPixKeys,
+                            ),
                           ),
                         ],
                       ),

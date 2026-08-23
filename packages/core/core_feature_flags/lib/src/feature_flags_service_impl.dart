@@ -2,7 +2,21 @@ import 'package:core_interfaces/core_interfaces.dart';
 import 'package:flutter/foundation.dart';
 
 
-class FeatureFlagsServiceImpl implements FeatureFlagService {
+class FeatureFlagsServiceImpl implements FeatureFlagService, CoreLibrary {
+  @override
+  String get id => 'core_feature_flags';
+
+  @override
+  Future<void> initialize(CoreLibraryDependencies dependencies) async {}
+
+  @override
+  Map<Type, Object> get services => {FeatureFlagService: this};
+
+  @override
+  List<BlocProvider> get globalBlocs => [];
+
+  @override
+  Future<void> dispose() async {}
   final Map<String, dynamic> _featureFlags = {};
   final Map<String, dynamic> _defaultFeatureFlags = {};
   final Map<String, List<FeatureFlagListener>> _listeners = {};

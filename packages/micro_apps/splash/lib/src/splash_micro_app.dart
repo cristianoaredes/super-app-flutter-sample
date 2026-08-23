@@ -1,5 +1,6 @@
 import 'package:core_interfaces/core_interfaces.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import 'di/navigation_service_locator.dart';
 import 'presentation/pages/splash_page.dart';

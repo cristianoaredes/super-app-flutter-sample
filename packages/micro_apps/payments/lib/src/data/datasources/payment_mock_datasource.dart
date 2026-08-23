@@ -65,9 +65,19 @@ class PaymentMockDataSource implements PaymentRemoteDataSource {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
+    if (payment.id.isNotEmpty) {
+      final existingIndex =
+          _mockPayments.indexWhere((item) => item.id == payment.id);
+      if (existingIndex >= 0) {
+        return _mockPayments[existingIndex];
+      }
+    }
+
     final newPayment = payment.copyWith(
-      id: 'mock_${DateTime.now().millisecondsSinceEpoch}',
-      status: 'paid',
+      id: payment.id.isNotEmpty
+          ? payment.id
+          : 'mock_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'completed',
       date: DateTime.now(),
     );
 

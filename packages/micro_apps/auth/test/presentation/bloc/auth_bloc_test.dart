@@ -1,4 +1,5 @@
 import 'package:auth/src/domain/entities/user.dart';
+import 'package:auth/src/domain/repositories/auth_repository.dart';
 import 'package:auth/src/domain/usecases/login_usecase.dart';
 import 'package:auth/src/domain/usecases/logout_usecase.dart';
 import 'package:auth/src/domain/usecases/register_usecase.dart';
@@ -67,12 +68,33 @@ void main() {
 
     group('CheckAuthStatusEvent', () {
       blocTest<AuthBloc, AuthState>(
-        'emits [AuthLoadingState, UnauthenticatedState] when check auth status',
+        'emits [AuthLoadingState, UnauthenticatedState] when no session exists',
         build: () => authBloc,
         act: (bloc) => bloc.add(const CheckAuthStatusEvent()),
         expect: () => [
           const AuthLoadingState(),
           const UnauthenticatedState(),
+        ],
+      );
+
+      blocTest<AuthBloc, AuthState>(
+        'emits AuthenticatedState when repository has a current user',
+        build: () {
+          final repository = _FakeAuthRepository(user: testUser);
+          return AuthBloc(
+            loginUseCase: mockLoginUseCase,
+            logoutUseCase: mockLogoutUseCase,
+            registerUseCase: mockRegisterUseCase,
+            resetPasswordUseCase: mockResetPasswordUseCase,
+            analyticsService: mockAnalyticsService,
+            authService: _FakeAuthService(),
+            authRepository: repository,
+          );
+        },
+        act: (bloc) => bloc.add(const CheckAuthStatusEvent()),
+        expect: () => [
+          const AuthLoadingState(),
+          AuthenticatedState(user: testUser),
         ],
       );
     });
@@ -380,4 +402,74 @@ void main() {
       );
     });
   });
+}
+
+class _FakeAuthService implements AuthService {
+  bool _authenticated = false;
+  String? _userId;
+
+  @override
+  bool get isAuthenticated => _authenticated;
+
+  @override
+  Future<String?> get accessToken async => _authenticated ? 'session' : null;
+
+  @override
+  String? get currentUserId => _userId;
+
+  @override
+  void establishSession({required String userId, String? accessToken}) {
+    _userId = userId;
+    _authenticated = true;
+  }
+
+  @override
+  Future<bool> login(String username, String password) async => false;
+
+  @override
+  Future<void> logout() async {
+    _authenticated = false;
+    _userId = null;
+  }
+
+  @override
+  Future<bool> refreshToken() async => false;
+}
+
+class _FakeAuthRepository implements AuthRepository {
+  _FakeAuthRepository({this.user});
+
+  final User? user;
+
+  @override
+  Future<String?> getAccessToken() async => user == null ? null : 'session';
+
+  @override
+  Future<User?> getCurrentUser() async => user;
+
+  @override
+  Future<bool> isAuthenticated() async => user != null;
+
+  @override
+  Future<User> loginWithApple() => throw UnimplementedError();
+
+  @override
+  Future<User> loginWithEmailAndPassword(String email, String password) =>
+      throw UnimplementedError();
+
+  @override
+  Future<User> loginWithGoogle() => throw UnimplementedError();
+
+  @override
+  Future<void> logout() async {}
+
+  @override
+  Future<String?> refreshToken() async => null;
+
+  @override
+  Future<User> register(String name, String email, String password) =>
+      throw UnimplementedError();
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {}
 }

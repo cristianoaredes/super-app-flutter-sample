@@ -2,10 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'micro_app.dart';
-import 'micro_app_dependencies.dart';
-import 'bloc_registry.dart';
 import 'exceptions/app_exceptions.dart';
-import 'services/logging_service.dart';
 
 /// Classe base abstrata que implementa padrões comuns para todos os micro apps.
 ///

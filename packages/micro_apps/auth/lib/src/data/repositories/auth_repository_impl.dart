@@ -52,8 +52,8 @@ class AuthRepositoryImpl implements AuthRepository {
     final user =
         await _remoteDataSource.loginWithEmailAndPassword(email, password);
 
-    
     await _localDataSource.saveUser(user);
+    await _localDataSource.saveAccessToken('session_${user.id}');
 
     return user;
   }
@@ -64,8 +64,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final user = await _remoteDataSource.loginWithGoogle();
 
-    
     await _localDataSource.saveUser(user);
+    await _localDataSource.saveAccessToken('session_${user.id}');
 
     return user;
   }
@@ -76,8 +76,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final user = await _remoteDataSource.loginWithApple();
 
-    
     await _localDataSource.saveUser(user);
+    await _localDataSource.saveAccessToken('session_${user.id}');
 
     return user;
   }
@@ -94,8 +94,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final user = await _remoteDataSource.register(name, email, password);
 
-    
     await _localDataSource.saveUser(user);
+    await _localDataSource.saveAccessToken('session_${user.id}');
 
     return user;
   }

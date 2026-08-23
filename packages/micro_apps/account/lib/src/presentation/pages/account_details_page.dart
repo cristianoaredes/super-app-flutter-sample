@@ -73,8 +73,8 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
       appBar: AppBar(
         title: const Text('Detalhes da Conta'),
       ),
-      body: BlocProvider<AccountBloc>(
-        create: (context) => GetIt.instance<AccountBloc>(),
+      body: BlocProvider<AccountBloc>.value(
+        value: GetIt.instance<AccountBloc>(),
         child: Builder(builder: (context) {
           context.read<AccountBloc>().add(const LoadAccountEvent());
 
