@@ -6,7 +6,7 @@
   "project_name": "super-app-flutter-sample",
   "stack": "Dart/Flutter + Melos + BLoC/Cubit + GetIt + GoRouter",
   "autonomy_level": "L2",
-  "framework_version": "0.x",
+  "framework_version": "2.22.0",
   "sources": {
     ".archagents/00-overview.md": [
       {
@@ -366,6 +366,28 @@
       "what_didnt": "BlocProvider(create:) fechou singleton no web; iOS sim bloqueado por ML Kit; RUN formal só foi escrito no ship.",
       "next_time": "Abrir RUN no início do drain. Nunca BlocProvider.create em bloc GetIt/micro-app. Testar ship com flutter test por pacote, não da raiz do Melos.",
       "pattern_detected": "kIsWeb pulando init obrigatório + HydratedCubit = crash de rota; factory GetIt + create: = close no dispose."
+    }
+  ],
+  "applied_migrations": [
+    {
+      "id": "0001-sqlite-index",
+      "sha256": "268bc5e783183587c756d8f6bd30f1384624bff5c6cc7c2db7f91371b5743f60"
+    },
+    {
+      "id": "0002-adapters-sync",
+      "sha256": "f5e2849a0a321b25ee5e81527ca0eb0950c1ce2611dc335fe4aa2b73c54f1718"
+    },
+    {
+      "id": "0003-meta-framework-version",
+      "sha256": "bcf838830a2ad9aebacb6642b14125d445f509878fa89ffdbd1e50673ef656cd"
+    },
+    {
+      "id": "0004-observability-and-version-sync",
+      "sha256": "c9f725a5c5c1aa27b841cfa947fefef74bc9510a452cd009c5b8ac2c43338e55"
+    },
+    {
+      "id": "0005-gitignore-snapshots-brownfield",
+      "sha256": "e98ef989450a25bf27620facbf5a612d669b096cbcbd910fc606e8ad2c380773"
     }
   ]
 }

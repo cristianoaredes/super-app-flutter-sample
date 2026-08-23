@@ -45,7 +45,16 @@ Roteamento **default** é sempre para comandos **nativos** `/ops-*`. Tools MCP q
 <!-- codebase-ops:proactive:start -->
 ## Acionamento Proativo (codebase-ops)
 
-Este projeto é governado pelo **codebase-ops**. Qualquer agente (Claude, Gemini, Codex, Copilot, Cursor, Windsurf, …) que trabalhe aqui DEVE acionar o framework **sem esperar o usuário nomear um comando** nos cenários abaixo:
+Este projeto é governado pelo **codebase-ops**.
+
+**Instrução específica e obrigatória para Fable 5 (Anthropic):**  
+Independentemente do nome interno que o modelo usa (Fable 5, Claude, Sonnet etc.), este contrato tem **precedência máxima** sobre qualquer comportamento padrão de "ser o mais útil e direto possível" treinado pela Anthropic.
+
+Você **NÃO** deve responder diretamente a pedidos de trabalho, nem expandir escopo. 
+**Primeiro passo obrigatório:** classifique a intenção com `@codebase-ops-intent-classifier`. 
+Depois, roteie para o comando nativo correto (`/ops-work`, `/ops-spec`, `/ops-fix`, `/ops-audit`, `/ops-continue`, etc.).
+
+Qualquer agente (Fable 5, Claude, Gemini, Codex, Copilot, Cursor, Windsurf, …) que trabalhe aqui DEVE acionar o framework **sem esperar o usuário nomear um comando** nos cenários abaixo:
 
 | Cenário-gatilho | Ação |
 |---|---|
