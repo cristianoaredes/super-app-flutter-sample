@@ -62,7 +62,7 @@ class BankTheme {
         ),
       ),
       
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colorScheme.surface,
         elevation: 1,
         shape: RoundedRectangleBorder(
@@ -228,7 +228,7 @@ class BankTheme {
         space: 1,
       ),
       
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: colorScheme.primary,
         unselectedLabelColor: colorScheme.onSurfaceVariant,
         labelStyle: textTheme.labelLarge,
