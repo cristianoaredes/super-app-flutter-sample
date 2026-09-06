@@ -1,6 +1,7 @@
 library core_interfaces;
 
 export 'src/micro_app.dart';
+export 'src/micro_app_dependencies.dart';
 export 'src/base_micro_app.dart';
 export 'src/core_library.dart';
 export 'src/shared_library.dart';
