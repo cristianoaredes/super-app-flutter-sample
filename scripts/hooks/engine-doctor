@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# engine-doctor — prova o encadeamento ponta-a-ponta (TCK-2821 f1): resolve o
+# motor (local → $CODEBASE_OPS_ENGINE_DIR → ~/.orqo) e imprime caminho+sha256.
+# Clone fresco/CI rodam isto ANTES de confiar que o executável está presente.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ENGINE="$(python3 "$ROOT/.orqo/resolve-engine.py" --root "$ROOT")"
+SHA="$(python3 -c 'import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],"rb").read()).hexdigest())' "$ENGINE")"
+echo "engine: $ENGINE"
+echo "sha256: $SHA"

@@ -46,3 +46,8 @@ app.*.map.json
 !README.md
 !README_en.md
 !docs/**/*.md
+
+# codebase-ops thin-client (TCK-0262)
+.archagents/.index.db
+.archagents/.index.db-wal
+.archagents/.index.db-shm

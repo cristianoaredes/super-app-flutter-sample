@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# pre-commit (thin-client) — piso do commit (TCK-2821 f1). Falha FECHADO: sem
+# motor resolúvel o commit NÃO passa (rc 3 instruído — build-engine.sh /
+# ~/.orqo), pois governança sem executável é ficulação (DSC-20260822-b f2).
+# O piso regex/gitleaks completo entra na conversão da frota (fases 3–4).
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ENGINE="$(python3 "$ROOT/.orqo/resolve-engine.py" --root "$ROOT")"
+echo "[thin] engine OK: $ENGINE"
