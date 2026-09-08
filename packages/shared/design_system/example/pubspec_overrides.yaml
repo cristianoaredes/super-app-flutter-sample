@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: design_system
+dependency_overrides:
+  design_system:
+    path: ..

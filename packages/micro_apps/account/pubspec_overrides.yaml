@@ -1,0 +1,14 @@
+# melos_managed_dependency_overrides: core_analytics,core_interfaces,core_network,core_storage,design_system,shared_utils
+dependency_overrides:
+  core_analytics:
+    path: ../../core/core_analytics
+  core_interfaces:
+    path: ../../core/core_interfaces
+  core_network:
+    path: ../../core/core_network
+  core_storage:
+    path: ../../core/core_storage
+  design_system:
+    path: ../../shared/design_system
+  shared_utils:
+    path: ../../shared/shared_utils

@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: core_interfaces
+dependency_overrides:
+  core_interfaces:
+    path: ../../core/core_interfaces

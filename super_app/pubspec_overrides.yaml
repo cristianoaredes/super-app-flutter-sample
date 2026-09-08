@@ -1,6 +1,36 @@
-# melos_managed_dependency_overrides: core_interfaces,payments
+# melos_managed_dependency_overrides: core_interfaces,payments,account,auth,cards,core_analytics,core_communication,core_feature_flags,core_logging,core_navigation,core_network,core_storage,dashboard,design_system,pix,shared_utils,splash
 dependency_overrides:
+  account:
+    path: ../packages/micro_apps/account
+  auth:
+    path: ../packages/micro_apps/auth
+  cards:
+    path: ../packages/micro_apps/cards
+  core_analytics:
+    path: ../packages/core/core_analytics
+  core_communication:
+    path: ../packages/core/core_communication
+  core_feature_flags:
+    path: ../packages/core/core_feature_flags
   core_interfaces:
     path: ../packages/core/core_interfaces
+  core_logging:
+    path: ../packages/core/core_logging
+  core_navigation:
+    path: ../packages/core/core_navigation
+  core_network:
+    path: ../packages/core/core_network
+  core_storage:
+    path: ../packages/core/core_storage
+  dashboard:
+    path: ../packages/micro_apps/dashboard
+  design_system:
+    path: ../packages/shared/design_system
   payments:
     path: ../packages/micro_apps/payments
+  pix:
+    path: ../packages/micro_apps/pix
+  shared_utils:
+    path: ../packages/shared/shared_utils
+  splash:
+    path: ../packages/micro_apps/splash
