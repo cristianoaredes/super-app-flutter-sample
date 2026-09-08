@@ -47,12 +47,8 @@ app.*.map.json
 !README_en.md
 !docs/**/*.md
 
-# codebase-ops thin-client (TCK-0262)
-.archagents/.index.db
-.archagents/.index.db-wal
-.archagents/.index.db-shm
-
-# codebase-ops: o motor NAO e versionado neste repo (TCK-0272).
-# Resolucao: $CODEBASE_OPS_ENGINE_DIR ou ~/.orqo/engine.pyz (resolve-engine.py).
-.orqo/engine.pyz
-.archagents/99-memory/decisions/.memory.lock
+# codebase-ops: este repositorio NAO hospeda o framework (TCK-0274).
+# Nem o motor, nem os hooks, nem o estado de governanca. A governanca, quando
+# houver, chega pelo runtime — nao por arquivos versionados aqui.
+.orqo/
+.archagents/
