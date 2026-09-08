@@ -51,3 +51,8 @@ app.*.map.json
 .archagents/.index.db
 .archagents/.index.db-wal
 .archagents/.index.db-shm
+
+# codebase-ops: o motor NAO e versionado neste repo (TCK-0272).
+# Resolucao: $CODEBASE_OPS_ENGINE_DIR ou ~/.orqo/engine.pyz (resolve-engine.py).
+.orqo/engine.pyz
+.archagents/99-memory/decisions/.memory.lock
