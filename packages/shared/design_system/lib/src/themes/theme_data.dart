@@ -3,14 +3,12 @@ import '../atoms/colors.dart';
 import '../atoms/typography.dart';
 import 'theme_extensions.dart';
 
-
 class BankTheme {
-  
   static ThemeData lightTheme = _buildLightTheme();
   static ThemeData darkTheme = _buildDarkTheme();
-  
-  
-  static ThemeData generateThemeFromSeed(Color seedColor, {bool isDark = false}) {
+
+  static ThemeData generateThemeFromSeed(Color seedColor,
+      {bool isDark = false}) {
     final ColorScheme colorScheme = isDark
         ? ColorScheme.fromSeed(
             seedColor: seedColor,
@@ -20,38 +18,32 @@ class BankTheme {
             seedColor: seedColor,
             brightness: Brightness.light,
           );
-    
+
     return isDark
         ? _buildTheme(colorScheme, isDark: true)
         : _buildTheme(colorScheme, isDark: false);
   }
-  
-  
+
   static ThemeData _buildLightTheme() {
     final ColorScheme colorScheme = BankColors.lightColorScheme(null);
     return _buildTheme(colorScheme, isDark: false);
   }
-  
-  
+
   static ThemeData _buildDarkTheme() {
     final ColorScheme colorScheme = BankColors.darkColorScheme(null);
     return _buildTheme(colorScheme, isDark: true);
   }
-  
-  
-  static ThemeData _buildTheme(ColorScheme colorScheme, {required bool isDark}) {
+
+  static ThemeData _buildTheme(ColorScheme colorScheme,
+      {required bool isDark}) {
     final TextTheme textTheme = BankTypography.textTheme;
-    
+
     final ThemeData baseTheme = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       brightness: isDark ? Brightness.dark : Brightness.light,
-      
-      
       textTheme: textTheme,
       primaryTextTheme: textTheme,
-      
-      
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.surfaceVariant,
         foregroundColor: colorScheme.onSurfaceVariant,
@@ -61,15 +53,13 @@ class BankTheme {
           color: colorScheme.onSurfaceVariant,
         ),
       ),
-      
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colorScheme.surface,
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
@@ -84,7 +74,6 @@ class BankTheme {
           ),
         ),
       ),
-      
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: colorScheme.primary,
@@ -98,7 +87,6 @@ class BankTheme {
           ),
         ),
       ),
-      
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.primary,
@@ -111,7 +99,6 @@ class BankTheme {
           ),
         ),
       ),
-      
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surface,
@@ -164,7 +151,6 @@ class BankTheme {
           color: colorScheme.error,
         ),
       ),
-      
       chipTheme: ChipThemeData(
         backgroundColor: colorScheme.surface,
         deleteIconColor: colorScheme.onSurface,
@@ -186,7 +172,6 @@ class BankTheme {
           ),
         ),
       ),
-      
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: colorScheme.surface,
         selectedItemColor: colorScheme.primary,
@@ -196,7 +181,6 @@ class BankTheme {
         selectedLabelStyle: textTheme.labelSmall,
         unselectedLabelStyle: textTheme.labelSmall,
       ),
-      
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: colorScheme.surface,
         indicatorColor: colorScheme.primaryContainer,
@@ -221,14 +205,12 @@ class BankTheme {
           );
         }),
       ),
-      
       dividerTheme: DividerThemeData(
         color: colorScheme.outline.withOpacity(0.2),
         thickness: 1,
         space: 1,
       ),
-      
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: colorScheme.primary,
         unselectedLabelColor: colorScheme.onSurfaceVariant,
         labelStyle: textTheme.labelLarge,
@@ -242,8 +224,7 @@ class BankTheme {
         ),
       ),
     );
-    
-    
+
     return baseTheme.copyWith(
       extensions: <ThemeExtension<dynamic>>[
         FormThemeExtension.light(baseTheme),
